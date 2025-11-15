@@ -19,15 +19,18 @@ export const vuetifyConfig = {
         colors: {
           background: '#C4C0A9',
           surface: '#D3CDB5',
-          primary: '#1976D2',
-          secondary: '#424242',
-          accent: '#82B1FF',
+          primary: '#47453D',
+          secondary: '#C4C0A9',
+          accent: '#D3CDB5',
           error: '#FF5252',
           info: '#2196F3',
           success: '#4CAF50',
           warning: '#FB8C00',
-        },
-      },
-    },
-  },
+          text: '#47453D',
+          "on-surface": '#47453D',
+          "on-background": '#47453D'
+        }
+      }
+    }
+  }
 }
