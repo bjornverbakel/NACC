@@ -4,6 +4,7 @@
     
     <v-form @submit.prevent="signUp">
       <ErrorAlert :error-msg="authError" @clearError="clearError" />
+      <SuccessAlert :success-msg="authSuccess" @clearSuccess="clearSuccess" />
       
       <v-text-field
         v-model="name"
@@ -83,6 +84,7 @@ const client = useSupabaseClient();
 const user = useSupabaseUser();
 const loading = ref(false);
 const authError = ref('');
+const authSuccess = ref('');
 
 watchEffect(async () => {
   if (user.value) {
@@ -94,7 +96,7 @@ const signUp = async () => {
   if (!name.value) return (authError.value = 'First name required');
   if (!lastname.value) return (authError.value = 'Last name required');
   loading.value = true;
-  const { error } = await client.auth.signUp({
+  const { data, error } = await client.auth.signUp({
     email: email.value,
     password: password.value,
     options: {
@@ -105,13 +107,22 @@ const signUp = async () => {
       },
     },
   });
+  
+  loading.value = false;
+  
   if (error) {
-    loading.value = false;
     authError.value = error.message;
+  } else if (data?.user && !data.session) {
+    // Email confirmation is required
+    authSuccess.value = 'Account created! Please check your email to confirm your account.';
   }
 };
 
 const clearError = () => {
   authError.value = '';
+};
+
+const clearSuccess = () => {
+  authSuccess.value = '';
 };
 </script>
