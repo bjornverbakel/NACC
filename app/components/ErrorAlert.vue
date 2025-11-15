@@ -40,9 +40,13 @@ const clearError = () => {
 };
 </script>
 
-<style lang="postcss">
+<style scoped>
 .cOKwvV {
-  @apply mb-4 gap-2 text-left flex relative;
+  margin-bottom: 1rem;
+  gap: 0.5rem;
+  text-align: left;
+  display: flex;
+  position: relative;
   padding: 8px 20px 8px 8px;
   border-radius: 5px;
   background: rgb(255, 255, 255);
@@ -56,41 +60,60 @@ const clearError = () => {
   --notification-shadow-light: #d62b2014;
   --notification-pale: #d62b201a;
   --notification-transparent: #d62b2000;
-  &::before {
-    @apply w-40 absolute left-0 top-0 bottom-0 pointer-events-none;
-    content: '';
-    border-radius: 5px 0px 0px 5px;
-    background-image: linear-gradient(120deg, var(--notification-color) 0%, var(--notification-transparent) 55%);
-    opacity: 0.15;
-  }
+}
+.cOKwvV::before {
+  width: 10rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  content: '';
+  border-radius: 5px 0px 0px 5px;
+  background-image: linear-gradient(120deg, var(--notification-color) 0%, var(--notification-transparent) 55%);
+  opacity: 0.15;
 }
 .ckmpXq {
-  @apply w-6 h-6 flex justify-center items-center;
-  & svg {
-    --icon-color: var(--notification-dark);
-    --icon-size: 18px;
-  }
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ckmpXq svg {
+  --icon-color: var(--notification-dark);
+  --icon-size: 18px;
 }
 .cAmQly {
-  @apply m-0 leading-6 text-sm font-medium;
+  margin: 0;
+  line-height: 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 .dgcJHV {
-  @apply ml-auto flex;
+  margin-left: auto;
+  display: flex;
   gap: 5px;
 }
 .dVKHAC {
-  @apply cursor-pointer w-6 h-6 p-1 box-border ml-auto -mr-3;
+  cursor: pointer;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0.25rem;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: -0.75rem;
   border-radius: 3px;
   transition: background-color 0.2s ease 0s, transform 0.2s ease 0s;
-  & svg {
-    --icon-size: 16px;
-    --icon-color: var(--notification-dark);
-  }
-  &:hover {
-    background-color: var(--notification-pale);
-  }
-  &:active {
-    transform: scale(0.975);
-  }
+}
+.dVKHAC svg {
+  --icon-size: 16px;
+  --icon-color: var(--notification-dark);
+}
+.dVKHAC:hover {
+  background-color: var(--notification-pale);
+}
+.dVKHAC:active {
+  transform: scale(0.975);
 }
 </style>

@@ -4,7 +4,7 @@
   </NuxtLayout>
 </template>
 
-<style lang="postcss">
+<style>
 @keyframes fadeIn {
   0% {
     opacity: 0.001;

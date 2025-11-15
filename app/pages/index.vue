@@ -1,5 +1,5 @@
 <template>
-  <div class="relative z-10 max-w-screen-sm">
+  <div style="position: relative; z-index: 10; max-width: 640px;">
     <p v-if="user" class="fVeafc in">Hi {{ user.user_metadata.first_name }}</p>
     <p v-else class="fVeafc">unauthenticated</p>
     <h1 class="kKxhrq">
