@@ -1,0 +1,70 @@
+<template>
+  <v-app-bar color="primary" class="header">
+    <template v-slot:prepend class="ga-4">
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+    </template>
+
+    <v-app-bar-title class="text-h4">
+      <NuxtLink to="/" class="text-decoration-none d-inline-block" style="color: inherit">
+        NACC
+        <div v-if="$vuetify.display.smAndUp" class="text-body-2">
+          NieR: Automata Completion Checklist
+        </div>
+      </NuxtLink>
+    </v-app-bar-title>
+
+    <template v-slot:append>
+      <div v-if="!user">
+        <v-btn color="secondary" to="/login" prepend-icon="mdi-login">Log in</v-btn>
+      </div>
+      <div v-else>
+        <!-- Desktop: Show email and logout button -->
+        <div v-if="$vuetify.display.mdAndUp" class="d-flex align-center ga-2">
+          <span class="text-body-2">{{ user.email }}</span>
+          <v-btn color="secondary" @click="logout" icon="mdi-logout" :loading="loading"></v-btn>
+        </div>
+
+        <!-- Mobile: Show menu -->
+        <v-menu v-else>
+          <template v-slot:activator="{ props }">
+            <v-btn icon="mdi-account-circle" v-bind="props"></v-btn>
+          </template>
+          <v-list style="max-width: 400px">
+            <v-list-item prepend-icon="mdi-account" title="Logged in as">
+              <v-list-item-subtitle class="text-body-1">{{ user.email }}</v-list-item-subtitle>
+            </v-list-item>
+            <v-divider class="my-2" />
+            <v-list-item @click="logout">
+              <v-list-item-title>
+                <v-icon start>mdi-logout</v-icon>
+                Logout
+              </v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+    </template>
+  </v-app-bar>
+</template>
+
+<script setup lang="ts">
+const user = useSupabaseUser()
+const client = useSupabaseClient()
+const loading = ref(false)
+
+const logout = async () => {
+  loading.value = true
+  const { error } = await client.auth.signOut()
+  loading.value = false
+  if (error) {
+    alert('Something went wrong!')
+  }
+}
+</script>
+
+<style scoped lang="scss">
+.header {
+  outline: 2px solid rgb(var(--v-theme-primary));
+  outline-offset: 2px;
+}
+</style>
