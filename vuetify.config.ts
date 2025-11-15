@@ -1,12 +1,8 @@
-import { VAppBarNavIcon } from "vuetify/components";
+import { VAppBarNavIcon, VMenu } from "vuetify/components";
 
 export const vuetifyConfig = {
   // Define global component defaults
   defaults: {
-    VBtn: {
-      elevation: 0,
-      rounded: "0",
-    },
     VCard: {
       elevation: 0,
       rounded: "0",
@@ -15,8 +11,8 @@ export const vuetifyConfig = {
       elevation: 0,
       rounded: "0",
     },
-    VAppBarNavIcon: {
-      rounded: "pill",
+    VList: {
+      rounded: "0",
     },
   },
 
