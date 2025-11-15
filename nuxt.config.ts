@@ -1,23 +1,29 @@
-import vuetify from 'vite-plugin-vuetify'
+import { vuetifyConfig } from './vuetify.config'
 
 export default defineNuxtConfig({
-  modules: ['@nuxtjs/supabase', '@nuxthub/core'],
+  modules: [
+    '@nuxtjs/supabase',
+    '@nuxthub/core',
+    'vuetify-nuxt-module'
+  ],
+
+  css: ['~/assets/styles/main.scss'],
 
   vite: {
-    ssr: {
-      noExternal: ['vuetify'],
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@import "@/assets/styles/_variables.scss"; @import "@/assets/styles/_mixins.scss";',
+        },
+      },
     },
   },
 
-  build: {
-    transpile: ['vuetify'],
-  },
-
-  hooks: {
-    'vite:extendConfig': (config) => {
-      config.plugins ||= []
-      config.plugins.push(vuetify({ autoImport: true }))
+  vuetify: {
+    moduleOptions: {
+      /* module specific options */
     },
+    vuetifyOptions: vuetifyConfig,
   },
 
   supabase: {

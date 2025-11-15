@@ -1,0 +1,19 @@
+// Global styles
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: $font-family-base;
+}
+
+.v-application {
+  font-family: $font-family-base !important;
+  
+  .text-h1, .text-h2, .text-h3, .text-h4, .text-h5, .text-h6,
+  .v-btn, .v-card-title, .v-list-item-title {
+    font-family: $font-family-base !important;
+  }
+}
