@@ -8,7 +8,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "supabase:types": "supabase gen types typescript --project-id \"$SUPABASE_PROJECT_ID\" --schema public > app/types/database.types.ts"
+    "supabase:types": "supabase gen types typescript --project-id uwxuwdrvfqbgczgpnxwb --schema public > app/types/database.types.ts"
   },
   "devDependencies": {
     "@nuxthub/core": "0.9.0",

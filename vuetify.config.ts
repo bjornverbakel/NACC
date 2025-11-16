@@ -33,7 +33,7 @@ export const vuetifyConfig = {
           warning: "#FB8C00",
           text: "#47453D",
           "on-surface": "#47453D",
-          "on-background": "#C4C0A9",
+          "on-background": "#47453D",
           "on-primary": "#C4C0A9",
         },
       },
