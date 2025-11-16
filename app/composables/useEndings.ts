@@ -15,7 +15,7 @@ export const useEndings = () => {
       const { data, error } = await client
         .from('endings')
         .select('*')
-        .order('letter')
+        .order('sort_order')
 
       return { data, error }
     }
@@ -28,7 +28,7 @@ export const useEndings = () => {
         user_endings!left(completed, completed_at)
       `)
       .eq('user_endings.user_id', userId)
-      .order('letter')
+      .order('sort_order')
 
     return { data, error }
   }
@@ -44,7 +44,7 @@ export const useEndings = () => {
       .select('id')
       .eq('user_id', userId)
       .eq('ending_id', endingId)
-      .single()
+      .maybeSingle()
 
     if (existing) {
       // Update existing record
