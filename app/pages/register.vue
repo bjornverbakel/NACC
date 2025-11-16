@@ -7,6 +7,14 @@
       <SuccessAlert :success-msg="authSuccess" @clearSuccess="clearSuccess" />
 
       <v-text-field
+        v-model="username"
+        label="Username"
+        type="text"
+        variant="outlined"
+        class="mb-3"
+      />
+
+      <v-text-field
         v-model="email"
         label="Email address"
         type="email"
@@ -43,6 +51,7 @@ useHead({
   title: 'Register | supaAuth',
 })
 
+const username = ref('')
 const email = ref('')
 const password = ref('')
 const client = useSupabaseClient()
@@ -58,10 +67,20 @@ watchEffect(async () => {
 })
 
 const signUp = async () => {
+  if (!username.value || !email.value || !password.value) {
+    authError.value = 'Please fill in all required fields.'
+    return
+  }
+
   loading.value = true
   const { data, error } = await client.auth.signUp({
     email: email.value,
     password: password.value,
+    options: {
+      data: {
+        username: username.value,
+      },
+    },
   })
 
   loading.value = false

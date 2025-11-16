@@ -1,7 +1,7 @@
 <template>
-  <v-app-bar color="primary" class="header">
+  <v-app-bar app color="primary" id="header">
     <template v-slot:prepend class="ga-4">
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="toggleDrawer"></v-app-bar-nav-icon>
     </template>
 
     <v-app-bar-title class="text-h4">
@@ -20,7 +20,9 @@
       <div v-else>
         <!-- Desktop: Show email and logout button -->
         <div v-if="$vuetify.display.mdAndUp" class="d-flex align-center ga-2">
-          <span class="text-body-2">{{ user.email }}</span>
+          <span class="text-body-2"
+            ><v-icon start icon="mdi-account" />{{ profile?.username || user.email }}</span
+          >
           <v-btn color="secondary" @click="logout" icon="mdi-logout" :loading="loading"></v-btn>
         </div>
 
@@ -31,7 +33,9 @@
           </template>
           <v-list style="max-width: 400px">
             <v-list-item prepend-icon="mdi-account" title="Logged in as">
-              <v-list-item-subtitle class="text-body-1">{{ user.email }}</v-list-item-subtitle>
+              <v-list-item-subtitle class="text-body-1">{{
+                profile?.username || user.email
+              }}</v-list-item-subtitle>
             </v-list-item>
             <v-divider class="my-2" />
             <v-list-item @click="logout">
@@ -49,8 +53,18 @@
 
 <script setup lang="ts">
 const user = useSupabaseUser()
+const { profile } = useProfile()
 const client = useSupabaseClient()
 const loading = ref(false)
+
+// Access drawer from layout
+const drawer = inject<Ref<boolean>>('drawer')
+
+const toggleDrawer = () => {
+  if (drawer) {
+    drawer.value = !drawer.value
+  }
+}
 
 const logout = async () => {
   loading.value = true
@@ -63,7 +77,7 @@ const logout = async () => {
 </script>
 
 <style scoped lang="scss">
-.header {
+#header {
   outline: 2px solid rgb(var(--v-theme-primary));
   outline-offset: 2px;
 }
