@@ -1,6 +1,6 @@
 <template>
-  <v-navigation-drawer v-model="drawer" class="border-0">
-    <v-list>
+  <v-navigation-drawer v-model="drawer" class="border-0" id="navDrawer" app>
+    <v-list density="comfortable" nav>
       <v-list-item prepend-icon="mdi-home" title="Home" to="/" />
       <v-list-item prepend-icon="mdi-book-open" title="Endings" to="/endings" />
       <v-list-item prepend-icon="mdi-map" title="Sidequests" to="/sidequests" />
@@ -41,3 +41,11 @@
 // Access drawer state from layout
 const drawer = inject<Ref<boolean>>('drawer')
 </script>
+
+<style scoped lang="scss">
+#navDrawer {
+  :deep(.v-list-item-title) {
+    text-transform: uppercase;
+  }
+}
+</style>
