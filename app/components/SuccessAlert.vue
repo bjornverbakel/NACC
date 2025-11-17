@@ -1,20 +1,13 @@
 <template>
-  <v-alert
-    v-if="successMsg"
-    type="success"
-    variant="tonal"
-    closable
-    @click:close="clearSuccess"
-    class="mb-4"
-  >
+  <v-alert v-if="successMsg" type="success" variant="tonal" closable @click:close="clearSuccess">
     {{ successMsg }}
   </v-alert>
 </template>
 
 <script setup lang="ts">
-defineProps<{ successMsg: String }>();
-const emit = defineEmits(['clearSuccess']);
+defineProps<{ successMsg: String }>()
+const emit = defineEmits(['clearSuccess'])
 const clearSuccess = () => {
-  emit('clearSuccess');
-};
+  emit('clearSuccess')
+}
 </script>
