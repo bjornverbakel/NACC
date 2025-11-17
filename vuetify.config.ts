@@ -1,8 +1,20 @@
-import { VAppBarNavIcon, VMenu } from "vuetify/components";
+import { VAppBarNavIcon, VMenu, VSelect, VTextarea, VTextField } from "vuetify/components";
 
 export const vuetifyConfig = {
   // Define global component defaults
   defaults: {
+    VTextField: {
+      hideDetails: true,
+      variant: "outlined",
+    },
+    VTextarea: {
+      hideDetails: true,
+      variant: "outlined",
+    },
+    VSelect: {
+      hideDetails: true,
+      variant: "outlined",
+    },
     VCard: {
       elevation: 0,
       rounded: "0",

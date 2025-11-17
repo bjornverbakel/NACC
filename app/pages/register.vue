@@ -1,48 +1,65 @@
 <template>
-  <div>
-    <v-card-title class="text-h4 mb-4">Create an account</v-card-title>
+  <div class="d-flex justify-center">
+    <v-card class="pa-12 d-flex flex-column ga-8" width="600" outlined>
+      <v-card-title class="text-h4 py-0">
+        {{ isAnonymous ? 'Create Your Account' : 'Sign up' }}
+      </v-card-title>
 
-    <v-form @submit.prevent="signUp">
-      <ErrorAlert :error-msg="authError" @clearError="clearError" />
-      <SuccessAlert :success-msg="authSuccess" @clearSuccess="clearSuccess" />
+      <v-alert v-if="isAnonymous && !authSuccess && !authError" type="info" density="compact">
+        You're currently in Guest Mode. Sign up to secure your progress!
+      </v-alert>
 
-      <v-text-field
-        v-model="username"
-        label="Username"
-        type="text"
-        variant="outlined"
-        class="mb-3"
-      />
+      <v-form class="d-flex flex-column ga-4" @submit.prevent="signUp">
+        <ErrorAlert :error-msg="authError" @clearError="clearError" />
+        <SuccessAlert :success-msg="authSuccess" @clearSuccess="clearSuccess" />
 
-      <v-text-field
-        v-model="email"
-        label="Email address"
-        type="email"
-        variant="outlined"
-        class="mb-3"
-      />
+        <v-text-field
+          v-model="username"
+          prepend-inner-icon="mdi-account"
+          label="Username"
+          type="text"
+        />
 
-      <v-text-field
-        v-model="password"
-        label="Password"
-        type="password"
-        variant="outlined"
-        class="mb-3"
-      />
+        <v-text-field
+          v-model="email"
+          prepend-inner-icon="mdi-email"
+          label="Email address"
+          type="email"
+        />
 
-      <v-btn type="submit" color="primary" block :loading="loading" class="mb-3"> Sign up </v-btn>
+        <v-text-field
+          v-model="password"
+          prepend-inner-icon="mdi-lock"
+          label="Password"
+          type="password"
+        />
 
-      <v-card-text class="text-caption text-center">
-        By signing up you agree to our
-        <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer"
-          >API Terms of Service</a
-        >
-        and
-        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer"
-          >Privacy Policy</a
-        >.
-      </v-card-text>
-    </v-form>
+        <v-btn type="submit" color="primary" block :loading="loading"> Sign up </v-btn>
+      </v-form>
+
+      <div v-if="!isAnonymous" class="d-flex align-center">
+        <v-divider />
+        <span class="mx-4">Or</span>
+        <v-divider />
+      </div>
+
+      <v-btn
+        v-if="!isAnonymous"
+        @click="signInAnonymously"
+        variant="tonal"
+        block
+        :loading="anonymousLoading"
+      >
+        Continue as Guest
+      </v-btn>
+
+      <div class="text-center text-body-2 text-medium-emphasis">
+        <p>
+          Already have an account?
+          <NuxtLink to="/login" class="text-decoration-none text-primary">Log in</NuxtLink>
+        </p>
+      </div>
+    </v-card>
   </div>
 </template>
 
@@ -51,17 +68,20 @@ useHead({
   title: 'Register | supaAuth',
 })
 
+const { isAnonymous, convertAnonymousToUser } = useAuth()
 const username = ref('')
 const email = ref('')
 const password = ref('')
 const client = useSupabaseClient()
 const user = useSupabaseUser()
 const loading = ref(false)
+const anonymousLoading = ref(false)
 const authError = ref('')
 const authSuccess = ref('')
 
 watchEffect(async () => {
-  if (user.value) {
+  // Only redirect non-anonymous authenticated users
+  if (user.value && !isAnonymous.value) {
     await navigateTo('/')
   }
 })
@@ -73,23 +93,39 @@ const signUp = async () => {
   }
 
   loading.value = true
-  const { data, error } = await client.auth.signUp({
-    email: email.value,
-    password: password.value,
-    options: {
-      data: {
-        username: username.value,
+
+  // If user is anonymous, convert them instead of creating a new account
+  if (isAnonymous.value) {
+    const { error } = await convertAnonymousToUser(email.value, password.value, username.value)
+
+    loading.value = false
+
+    if (error) {
+      authError.value = error.message
+    } else {
+      // Email confirmation is required
+      authSuccess.value = 'Account created! Please check your email to confirm your account.'
+    }
+  } else {
+    // Normal sign up flow
+    const { data, error } = await client.auth.signUp({
+      email: email.value,
+      password: password.value,
+      options: {
+        data: {
+          username: username.value,
+        },
       },
-    },
-  })
+    })
 
-  loading.value = false
+    loading.value = false
 
-  if (error) {
-    authError.value = error.message
-  } else if (data?.user && !data.session) {
-    // Email confirmation is required
-    authSuccess.value = 'Account created! Please check your email to confirm your account.'
+    if (error) {
+      authError.value = error.message
+    } else if (data?.user && !data.session) {
+      // Email confirmation is required
+      authSuccess.value = 'Account created! Please check your email to confirm your account.'
+    }
   }
 }
 
@@ -99,5 +135,20 @@ const clearError = () => {
 
 const clearSuccess = () => {
   authSuccess.value = ''
+}
+
+const signInAnonymously = async () => {
+  anonymousLoading.value = true
+  const { error } = await client.auth.signInAnonymously()
+  if (error) {
+    anonymousLoading.value = false
+    authError.value = error.message
+    setTimeout(() => {
+      authError.value = ''
+    }, 5000)
+  } else {
+    // Successfully signed in as anonymous - navigate to home
+    await navigateTo('/')
+  }
 }
 </script>

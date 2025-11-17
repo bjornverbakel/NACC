@@ -1,37 +1,52 @@
 <template>
-  <div>
-    <v-card-title class="text-h4 mb-4">Sign in</v-card-title>
+  <div class="d-flex justify-center">
+    <v-card class="pa-12 d-flex flex-column ga-8" width="600" outlined>
+      <v-card-title class="text-h4 py-0">Log in</v-card-title>
 
-    <v-form @submit.prevent="login">
-      <ErrorAlert :error-msg="authError" @clearError="clearError" />
+      <v-form class="d-flex flex-column ga-4" @submit.prevent="login">
+        <ErrorAlert :error-msg="authError" @clearError="clearError" />
 
-      <v-text-field
-        v-model="email"
-        label="Email address"
-        type="email"
-        variant="outlined"
-        class="mb-3"
-      />
+        <v-text-field
+          v-model="email"
+          prepend-inner-icon="mdi-email"
+          label="Email address"
+          type="email"
+        />
 
-      <v-text-field
-        v-model="password"
-        label="Password"
-        type="password"
-        variant="outlined"
-        class="mb-3"
-      />
+        <div class="text-right">
+          <v-text-field
+            v-model="password"
+            prepend-inner-icon="mdi-lock"
+            label="Password"
+            type="password"
+            class="mb-1"
+          />
 
-      <v-btn type="submit" color="primary" block :loading="loading" class="mb-3"> Sign in </v-btn>
+          <NuxtLink to="/forgot-password" class="text-primary text-decoration-none text-body-2">
+            Forgot password?
+          </NuxtLink>
+        </div>
 
-      <v-btn to="/forgot-password" variant="text" block class="mb-4"> Forgot your password? </v-btn>
-    </v-form>
+        <v-btn type="submit" color="primary" block :loading="loading">Log in</v-btn>
+      </v-form>
 
-    <v-divider class="my-4" />
+      <div class="d-flex align-center">
+        <v-divider />
+        <span class="mx-4">Or</span>
+        <v-divider />
+      </div>
 
-    <div class="text-center">
-      <p class="mb-3">Don't have an account?</p>
-      <v-btn to="/register" variant="outlined" block> Create new account </v-btn>
-    </div>
+      <v-btn @click="signInAnonymously" variant="tonal" block :loading="anonymousLoading">
+        Continue as Guest
+      </v-btn>
+
+      <div class="text-center text-body-2 text-medium-emphasis">
+        <p>
+          Don't have an account?
+          <NuxtLink to="/register" class="text-decoration-none text-primary">Sign up</NuxtLink>
+        </p>
+      </div>
+    </v-card>
   </div>
 </template>
 
@@ -42,6 +57,7 @@ useHead({
 
 const user = useSupabaseUser()
 const loading = ref(false)
+const anonymousLoading = ref(false)
 const authError = ref('')
 const email = ref('')
 const password = ref('')
@@ -71,4 +87,26 @@ const login = async () => {
 const clearError = () => {
   authError.value = ''
 }
+
+const signInAnonymously = async () => {
+  anonymousLoading.value = true
+  const { error } = await client.auth.signInAnonymously()
+  if (error) {
+    anonymousLoading.value = false
+    authError.value = error.message
+    setTimeout(() => {
+      authError.value = ''
+    }, 5000)
+  } else {
+    // Successfully signed in as anonymous - navigate to home
+    await navigateTo('/')
+  }
+}
 </script>
+
+<style scoped lang="scss">
+.main-content {
+  justify-content: center;
+  align-items: center;
+}
+</style>

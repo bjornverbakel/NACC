@@ -14,10 +14,14 @@
     </v-app-bar-title>
 
     <template v-slot:append>
-      <div v-if="!user">
-        <v-btn color="secondary" to="/login" prepend-icon="mdi-login">Log in</v-btn>
+      <!-- Anonymous user: Show chip + Sign up button -->
+      <div v-if="user && isAnonymous" class="d-flex align-center ga-2">
+        <v-chip color="warning" size="small" prepend-icon="mdi-incognito"> Guest Mode </v-chip>
+        <v-btn color="secondary" to="/register" prepend-icon="mdi-account-plus"> Sign up </v-btn>
       </div>
-      <div v-else>
+
+      <!-- Normal logged in user: Show profile -->
+      <div v-else-if="user" class="d-flex align-center ga-2">
         <!-- Desktop: Show email and logout button -->
         <div v-if="$vuetify.display.mdAndUp" class="d-flex align-center ga-2">
           <span class="text-body-2"
@@ -47,6 +51,11 @@
           </v-list>
         </v-menu>
       </div>
+
+      <!-- No user at all: Show login button -->
+      <div v-else>
+        <v-btn color="secondary" to="/login" prepend-icon="mdi-login">Log in</v-btn>
+      </div>
     </template>
   </v-app-bar>
 </template>
@@ -54,6 +63,7 @@
 <script setup lang="ts">
 const user = useSupabaseUser()
 const { profile } = useProfile()
+const { isAnonymous } = useAuth()
 const client = useSupabaseClient()
 const loading = ref(false)
 
