@@ -3,8 +3,13 @@
     <v-card class="pa-12 d-flex flex-column ga-8" width="600" outlined>
       <v-card-title class="text-h4 py-0">Log in</v-card-title>
 
-      <v-form class="d-flex flex-column ga-4" @submit.prevent="login">
-        <ErrorAlert :error-msg="authError" @clearError="clearError" />
+      <v-form class="d-flex flex-column ga-4" @submit.prevent="handleLogin">
+        <AppAlert
+          v-if="feedback.message"
+          :message="feedback.message"
+          :type="feedback.type"
+          @clear="clearFeedback"
+        />
 
         <v-text-field
           v-model="email"
@@ -36,7 +41,7 @@
         <v-divider />
       </div>
 
-      <v-btn @click="signInAnonymously" variant="tonal" block :loading="anonymousLoading">
+      <v-btn @click="handleAnonymousSignIn" variant="tonal" block :loading="anonymousLoading">
         Continue as Guest
       </v-btn>
 
@@ -52,16 +57,16 @@
 
 <script setup lang="ts">
 useHead({
-  title: 'Login | supaAuth',
+  title: 'Login | NACC',
 })
 
+const { login, signInAnonymously } = useAuth()
 const user = useSupabaseUser()
 const loading = ref(false)
 const anonymousLoading = ref(false)
-const authError = ref('')
+const feedback = ref({ message: '', type: 'info' as 'success' | 'error' | 'info' | 'warning' })
 const email = ref('')
 const password = ref('')
-const client = useSupabaseClient()
 
 watchEffect(async () => {
   if (user.value) {
@@ -69,34 +74,48 @@ watchEffect(async () => {
   }
 })
 
-const login = async () => {
+const handleLogin = async () => {
+  const trimmedEmail = email.value.trim()
+  const currentPassword = password.value
+
+  if (!trimmedEmail || !currentPassword) {
+    let missing = []
+    if (!trimmedEmail) missing.push('email')
+    if (!currentPassword) missing.push('password')
+    feedback.value = { message: `Missing: ${missing.join(', ')}`, type: 'error' }
+    return
+  }
   loading.value = true
-  const { error } = await client.auth.signInWithPassword({
-    email: email.value,
-    password: password.value,
-  })
+  const startTime = Date.now()
+
+  const { error } = await login(trimmedEmail, currentPassword)
+
+  // Ensure minimum loading time
+  const elapsedTime = Date.now() - startTime
+  const minDelay = 1000 // 1 second
+  if (elapsedTime < minDelay) {
+    await new Promise(resolve => setTimeout(resolve, minDelay - elapsedTime))
+  }
+
+  loading.value = false
+
   if (error) {
-    loading.value = false
-    authError.value = error.message
-    setTimeout(() => {
-      authError.value = ''
-    }, 5000)
+    feedback.value = { message: error.message, type: 'error' }
+  } else {
+    feedback.value = { message: 'Login successful!', type: 'success' }
   }
 }
 
-const clearError = () => {
-  authError.value = ''
+const clearFeedback = () => {
+  feedback.value.message = ''
 }
 
-const signInAnonymously = async () => {
+const handleAnonymousSignIn = async () => {
   anonymousLoading.value = true
-  const { error } = await client.auth.signInAnonymously()
+  const { error } = await signInAnonymously()
   if (error) {
     anonymousLoading.value = false
-    authError.value = error.message
-    setTimeout(() => {
-      authError.value = ''
-    }, 5000)
+    feedback.value = { message: error.message, type: 'error' }
   } else {
     // Successfully signed in as anonymous - navigate to home
     await navigateTo('/')

@@ -5,13 +5,21 @@
         {{ isAnonymous ? 'Create Your Account' : 'Sign up' }}
       </v-card-title>
 
-      <v-alert v-if="isAnonymous && !authSuccess && !authError" type="info" density="compact">
-        You're currently in Guest Mode. Sign up to secure your progress!
-      </v-alert>
+      <v-form class="d-flex flex-column ga-4" @submit.prevent="handleSignUp">
+        <AppAlert
+          v-if="isAnonymous"
+          type="info"
+          message="You're currently in Guest Mode. Sign up to secure your progress!"
+          :closable="false"
+        >
+        </AppAlert>
 
-      <v-form class="d-flex flex-column ga-4" @submit.prevent="signUp">
-        <ErrorAlert :error-msg="authError" @clearError="clearError" />
-        <SuccessAlert :success-msg="authSuccess" @clearSuccess="clearSuccess" />
+        <AppAlert
+          v-if="feedback.message"
+          :message="feedback.message"
+          :type="feedback.type"
+          @clear="clearFeedback"
+        />
 
         <v-text-field
           v-model="username"
@@ -34,7 +42,7 @@
           type="password"
         />
 
-        <v-btn type="submit" color="primary" block :loading="loading"> Sign up </v-btn>
+        <v-btn type="submit" color="primary" class="mt-4" block :loading="loading"> Sign up </v-btn>
       </v-form>
 
       <div v-if="!isAnonymous" class="d-flex align-center">
@@ -45,7 +53,7 @@
 
       <v-btn
         v-if="!isAnonymous"
-        @click="signInAnonymously"
+        @click="handleAnonymousSignIn"
         variant="tonal"
         block
         :loading="anonymousLoading"
@@ -65,19 +73,17 @@
 
 <script setup lang="ts">
 useHead({
-  title: 'Register | supaAuth',
+  title: 'Register | NACC',
 })
 
-const { isAnonymous, convertAnonymousToUser } = useAuth()
+const { isAnonymous, register, signInAnonymously } = useAuth()
 const username = ref('')
 const email = ref('')
 const password = ref('')
-const client = useSupabaseClient()
 const user = useSupabaseUser()
 const loading = ref(false)
 const anonymousLoading = ref(false)
-const authError = ref('')
-const authSuccess = ref('')
+const feedback = ref({ message: '', type: 'info' as 'success' | 'error' | 'info' | 'warning' })
 
 watchEffect(async () => {
   // Only redirect non-anonymous authenticated users
@@ -86,71 +92,64 @@ watchEffect(async () => {
   }
 })
 
-const signUp = async () => {
-  if (!username.value || !email.value || !password.value) {
-    authError.value = 'Please fill in all required fields.'
+const handleSignUp = async () => {
+  const trimmedUsername = username.value.trim()
+  const trimmedEmail = email.value.trim()
+  const currentPassword = password.value
+
+  if (!trimmedUsername || !trimmedEmail || !currentPassword) {
+    let missing = []
+    if (!trimmedUsername) missing.push('username')
+    if (!trimmedEmail) missing.push('email')
+    if (!currentPassword) missing.push('password')
+    feedback.value = { message: `Missing: ${missing.join(', ')}`, type: 'error' }
+    return
+  }
+
+  if (currentPassword.length < 6) {
+    feedback.value = { message: 'Password must be at least 6 characters long', type: 'error' }
     return
   }
 
   loading.value = true
+  const startTime = Date.now()
 
-  // If user is anonymous, convert them instead of creating a new account
-  if (isAnonymous.value) {
-    const { error } = await convertAnonymousToUser({
-      email: email.value,
-      password: password.value,
-      username: username.value,
-    })
+  const { error } = await register({
+    email: trimmedEmail,
+    password: currentPassword,
+    username: trimmedUsername,
+  })
 
-    loading.value = false
+  // Ensure minimum loading time
+  const elapsedTime = Date.now() - startTime
+  const minDelay = 1000 // 1 second
+  if (elapsedTime < minDelay) {
+    await new Promise(resolve => setTimeout(resolve, minDelay - elapsedTime))
+  }
 
-    if (error) {
-      authError.value = error.message
-    } else {
-      // Email confirmation is required
-      authSuccess.value = 'Account created! Please check your email to confirm your account.'
-    }
+  loading.value = false
+
+  if (error) {
+    feedback.value = { message: error.message, type: 'error' }
   } else {
-    // Normal sign up flow
-    const { data, error } = await client.auth.signUp({
-      email: email.value,
-      password: password.value,
-      options: {
-        data: {
-          username: username.value,
-          full_name: username.value,
-        },
-      },
-    })
-
-    loading.value = false
-
-    if (error) {
-      authError.value = error.message
-    } else if (data?.user && !data.session) {
-      // Email confirmation is required
-      authSuccess.value = 'Account created! Please check your email to confirm your account.'
+    // Success message for both conversion and new signup
+    feedback.value = {
+      message: 'Account created! Please check your email to confirm your account.',
+      type: 'success',
     }
   }
 }
 
-const clearError = () => {
-  authError.value = ''
+const clearFeedback = () => {
+  feedback.value.message = ''
 }
 
-const clearSuccess = () => {
-  authSuccess.value = ''
-}
-
-const signInAnonymously = async () => {
+const handleAnonymousSignIn = async () => {
   anonymousLoading.value = true
-  const { error } = await client.auth.signInAnonymously()
+  const { error } = await signInAnonymously()
   if (error) {
     anonymousLoading.value = false
-    authError.value = error.message
-    setTimeout(() => {
-      authError.value = ''
-    }, 5000)
+    feedback.value = { message: error.message, type: 'error' }
   } else {
     // Successfully signed in as anonymous - navigate to home
     await navigateTo('/')

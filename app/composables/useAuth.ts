@@ -6,6 +6,14 @@ export const useAuth = () => {
     return user.value?.is_anonymous ?? false
   })
 
+  const signInAnonymously = async () => {
+    return await client.auth.signInAnonymously()
+  }
+
+  const login = async (email: string, password: string) => {
+    return await client.auth.signInWithPassword({ email, password })
+  }
+
   const convertAnonymousToUser = async (credentials: { email: string; password: string; username?: string }) => {
     const { email, password, username } = credentials
     
@@ -51,8 +59,29 @@ export const useAuth = () => {
     return { data, error }
   }
 
+  const register = async (credentials: { email: string; password: string; username: string }) => {
+    if (isAnonymous.value) {
+      return convertAnonymousToUser(credentials)
+    }
+    
+    const { email, password, username } = credentials
+    return await client.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          username,
+          full_name: username,
+        },
+      },
+    })
+  }
+
   return {
     isAnonymous,
     convertAnonymousToUser,
+    signInAnonymously,
+    login,
+    register,
   }
 }
