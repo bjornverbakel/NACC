@@ -139,10 +139,22 @@ const handleSignUp = async () => {
 
   if (error) {
     // Handle specific Supabase error messages
-    if (error.message.includes('Unable to validate email address: invalid format')) {
+    if (error.message.includes('Unable to validate email address')) {
       feedback.value = { message: 'Please enter a valid email address.', type: 'error' }
+    } else if (
+      error.message.includes('A user with this email address has already been registered')
+    ) {
+      // Prevent email enumeration: Show success message even if user exists
+      feedback.value = {
+        message: 'Account created! Please check your email to confirm your account.',
+        type: 'success',
+      }
     } else {
-      feedback.value = { message: error.message, type: 'error' }
+      // For other errors (e.g. database issues), show a generic error
+      feedback.value = {
+        message: 'An error occurred during registration. Please try again.',
+        type: 'error',
+      }
     }
   } else {
     // Success message for both conversion and new signup
