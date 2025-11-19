@@ -1,60 +1,68 @@
 <template>
-  <div>
-    <v-card-title class="text-h4 mb-4">Forgot password</v-card-title>
+  <div class="d-flex justify-center">
+    <v-card class="pa-12 d-flex flex-column ga-8" width="600" outlined>
+      <v-card-title class="text-h4 py-0">Forgot password</v-card-title>
 
-    <v-form @submit.prevent="resetPassword">
-      <ErrorAlert :error-msg="authError" @clearError="clearError" />
-      <SuccessAlert :success-msg="authSuccess" @clearSuccess="clearSuccess" />
+      <v-form class="d-flex flex-column ga-4" @submit.prevent="resetPassword">
+        <AppAlert
+          v-if="feedback.message"
+          :message="feedback.message"
+          :type="feedback.type"
+          @clear="clearFeedback"
+        />
 
-      <v-text-field
-        v-model="email"
-        label="Email address"
-        type="email"
-        variant="outlined"
-        class="mb-3"
-      />
+        <v-text-field
+          v-model="email"
+          prepend-inner-icon="mdi-email"
+          label="Email address"
+          type="email"
+        />
 
-      <v-btn type="submit" color="primary" block :loading="loading"> Request reset link </v-btn>
-    </v-form>
+        <v-btn type="submit" class="mt-4" color="primary" block :loading="loading">
+          Request reset link</v-btn
+        >
+      </v-form>
+    </v-card>
   </div>
 </template>
 
 <script setup lang="ts">
 useHead({
-  title: 'Forgot Password | supaAuth',
+  title: 'Forgot Password | NACC',
 })
 
 const email = ref('')
 const client = useSupabaseClient()
 const loading = ref(false)
-const authSuccess = ref('')
-const authError = ref('')
+const feedback = ref({ message: '', type: 'info' as 'success' | 'error' | 'info' | 'warning' })
 
 const resetPassword = async () => {
+  if (!email.value.trim()) {
+    feedback.value = { message: 'Please enter your email.', type: 'error' }
+    return
+  }
+
   loading.value = true
-  const { error } = await client.auth.resetPasswordForEmail(email.value, {
+  const startTime = Date.now()
+
+  const { error } = await client.auth.resetPasswordForEmail(email.value.trim(), {
     redirectTo: `${window.location.origin}/new-password`,
   })
-  if (error) {
-    loading.value = false
-    authError.value = error.message
-    setTimeout(() => {
-      authError.value = ''
-    }, 5000)
-  } else {
-    loading.value = false
-    authSuccess.value = "We've sent you an email."
-    setTimeout(() => {
-      authSuccess.value = ''
-    }, 5000)
+
+  // Ensure minimum loading time to prevent timing attacks
+  const elapsedTime = Date.now() - startTime
+  const minDelay = 1000 // 1 second
+  if (elapsedTime < minDelay) {
+    await new Promise(resolve => setTimeout(resolve, minDelay - elapsedTime))
   }
+
+  loading.value = false
+
+  // Always show success message to prevent email enumeration via error messages (like rate limits)
+  feedback.value = { message: 'Please check your email for the reset link.', type: 'success' }
 }
 
-const clearError = () => {
-  authError.value = ''
-}
-
-const clearSuccess = () => {
-  authSuccess.value = ''
+const clearFeedback = () => {
+  feedback.value.message = ''
 }
 </script>
