@@ -41,6 +41,8 @@
           type="password"
         />
 
+        <NuxtTurnstile v-model="token" class="mt-2 mx-auto" />
+
         <v-btn type="submit" color="primary" class="mt-4" block :loading="loading"> Sign up </v-btn>
       </v-form>
 
@@ -63,7 +65,11 @@
       <div class="text-center text-body-2 text-medium-emphasis">
         <p>
           Already have an account?
-          <NuxtLink to="/login" class="text-decoration-none text-primary">Log in</NuxtLink>
+          <NuxtLink
+            :to="{ path: '/login', query: route.query }"
+            class="text-decoration-none text-primary"
+            >Log in</NuxtLink
+          >
         </p>
       </div>
     </v-card>
@@ -79,7 +85,9 @@ const { isAnonymous, register, signInAnonymously } = useAuth()
 const username = ref('')
 const email = ref('')
 const password = ref('')
+const token = ref('')
 const user = useSupabaseUser()
+const route = useRoute()
 const loading = ref(false)
 const anonymousLoading = ref(false)
 const feedback = ref({ message: '', type: 'info' as 'success' | 'error' | 'info' | 'warning' })
@@ -87,7 +95,8 @@ const feedback = ref({ message: '', type: 'info' as 'success' | 'error' | 'info'
 watchEffect(async () => {
   // Only redirect non-anonymous authenticated users
   if (user.value && !isAnonymous.value) {
-    await navigateTo('/')
+    const redirectPath = route.query.redirect as string
+    await navigateTo(redirectPath || '/')
   }
 })
 
@@ -96,17 +105,19 @@ const handleSignUp = async () => {
   const trimmedEmail = email.value.trim()
   const currentPassword = password.value
 
+  // 1. Required Fields Check
   if (!trimmedUsername || !trimmedEmail || !currentPassword) {
     feedback.value = { message: `Please fill in all required fields.`, type: 'error' }
     return
   }
 
+  // 2. Password Strength Validation
   if (currentPassword.length < 6) {
     feedback.value = { message: 'Password must be at least 6 characters long', type: 'error' }
     return
   }
 
-  // Check for letters and digits
+  // 3. Password Complexity Check
   const hasLetter = /[a-zA-Z]/.test(currentPassword)
   const hasDigit = /\d/.test(currentPassword)
 
@@ -118,6 +129,12 @@ const handleSignUp = async () => {
     return
   }
 
+  // 4. Captcha Check
+  if (!token.value) {
+    feedback.value = { message: 'Please complete the security check', type: 'warning' }
+    return
+  }
+
   loading.value = true
   const startTime = Date.now()
 
@@ -125,6 +142,7 @@ const handleSignUp = async () => {
     email: trimmedEmail,
     password: currentPassword,
     username: trimmedUsername,
+    captchaToken: token.value,
   })
 
   // Ensure minimum loading time
@@ -176,7 +194,8 @@ const handleAnonymousSignIn = async () => {
     feedback.value = { message: error.message, type: 'error' }
   } else {
     // Successfully signed in as anonymous - navigate to home
-    await navigateTo('/')
+    const redirectPath = route.query.redirect as string
+    await navigateTo(redirectPath || '/')
   }
 }
 </script>

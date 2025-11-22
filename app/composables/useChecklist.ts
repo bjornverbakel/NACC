@@ -30,7 +30,10 @@ export const useChecklist = <T extends { id: any }>(
 
   const handleToggle = async (item: any, completed: boolean) => {
     if (!user.value) {
-      return navigateTo('/login')
+      return navigateTo({
+        path: '/login',
+        query: { redirect: useRoute().fullPath }
+      })
     }
 
     // Optimistic update

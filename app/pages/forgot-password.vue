@@ -18,6 +18,8 @@
           type="email"
         />
 
+        <NuxtTurnstile v-model="token" class="mt-2 mx-auto" />
+
         <v-btn type="submit" class="mt-4" color="primary" block :loading="loading">
           Request reset link</v-btn
         >
@@ -32,6 +34,7 @@ useHead({
 })
 
 const email = ref('')
+const token = ref('')
 const client = useSupabaseClient()
 const loading = ref(false)
 const feedback = ref({ message: '', type: 'info' as 'success' | 'error' | 'info' | 'warning' })
@@ -47,6 +50,7 @@ const resetPassword = async () => {
 
   const { error } = await client.auth.resetPasswordForEmail(email.value.trim(), {
     redirectTo: `${window.location.origin}/new-password`,
+    captchaToken: token.value,
   })
 
   // Ensure minimum loading time to prevent timing attacks
