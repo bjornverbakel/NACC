@@ -12,7 +12,8 @@ export const useTrackable = (
   const getAllWithStatus = async () => {
     const userId = user.value?.id || user.value?.sub
     if (!userId) {
-      // Not logged in - just return items without status
+      // Not logged in
+      // Return items without status
       const { data, error } = await client
         .from(tableName)
         .select('*')
@@ -41,38 +42,30 @@ export const useTrackable = (
     const userId = user.value?.id || user.value?.sub
     if (!userId) return { error: { message: 'Not authenticated' } }
 
-    // Check if record exists
-    const { data: existing } = await client
-      .from(userTableName)
-      .select('id')
-      .eq('user_id', userId)
-      .eq(foreignKey, itemId)
-      .maybeSingle()
-
-    if (existing) {
-      // Update existing record
+    if (!completed) {
+      // Remove completion record
       const { error } = await client
         .from(userTableName)
-        .update({
-          completed,
-          completed_at: completed ? new Date().toISOString() : null,
-          updated_at: new Date().toISOString(),
-        } as any) // Cast to any because the table is dynamic
+        .delete()
         .eq('user_id', userId)
         .eq(foreignKey, itemId)
 
       return { error }
-    } else {
-      // Insert new record
-      const { error } = await client.from(userTableName).insert({
+    }
+
+    // Add or update completion record
+    const { error } = await client.from(userTableName).upsert(
+      {
         user_id: userId,
         [foreignKey]: itemId,
-        completed,
-        completed_at: completed ? new Date().toISOString() : null,
-      } as any)
+        completed: true,
+        completed_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      } as any,
+      { onConflict: `user_id,${foreignKey}` }
+    )
 
-      return { error }
-    }
+    return { error }
   }
 
   return {
