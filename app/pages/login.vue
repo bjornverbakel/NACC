@@ -39,6 +39,15 @@
           </NuxtLink>
         </div>
 
+        <v-expand-transition>
+          <div v-if="showCaptcha" class="my-2 mx-auto text-center">
+            <div class="text-caption text-warning mb-1">
+              Security check required due to multiple failed attempts.
+            </div>
+            <NuxtTurnstile v-model="token" />
+          </div>
+        </v-expand-transition>
+
         <v-btn type="submit" color="primary" block :loading="loading">Log in</v-btn>
       </v-form>
 
@@ -61,7 +70,11 @@
       <div class="text-center text-body-2 text-medium-emphasis">
         <p>
           Don't have an account?
-          <NuxtLink to="/register" class="text-decoration-none text-primary">Sign up</NuxtLink>
+          <NuxtLink
+            :to="{ path: '/register', query: route.query }"
+            class="text-decoration-none text-primary"
+            >Sign up</NuxtLink
+          >
         </p>
       </div>
     </v-card>
@@ -75,16 +88,22 @@ useHead({
 
 const { isAnonymous, login, signInAnonymously } = useAuth()
 const user = useSupabaseUser()
+const failedAttempts = ref(0)
+const MAX_ATTEMPTS_BEFORE_CAPTCHA = 5 // Show captcha after 5 fails
+const showCaptcha = computed(() => failedAttempts.value >= MAX_ATTEMPTS_BEFORE_CAPTCHA)
 const loading = ref(false)
 const anonymousLoading = ref(false)
 const feedback = ref({ message: '', type: 'info' as 'success' | 'error' | 'info' | 'warning' })
 const email = ref('')
 const password = ref('')
+const token = ref('')
+const route = useRoute()
 
 watchEffect(async () => {
   // Only redirect non-anonymous authenticated users
   if (user.value && !isAnonymous.value) {
-    await navigateTo('/')
+    const redirectPath = route.query.redirect as string
+    await navigateTo(redirectPath || '/')
   }
 })
 
@@ -92,17 +111,24 @@ const handleLogin = async () => {
   const trimmedEmail = email.value.trim()
   const currentPassword = password.value
 
+  // 1. Required Fields Check
   if (!trimmedEmail || !currentPassword) {
-    let missing = []
-    if (!trimmedEmail) missing.push('email')
-    if (!currentPassword) missing.push('password')
-    feedback.value = { message: `Missing: ${missing.join(', ')}`, type: 'error' }
+    feedback.value = { message: 'Please fill in all required fields.', type: 'error' }
     return
   }
+
+  // 2. Conditional Captcha Check
+  if (showCaptcha.value && !token.value) {
+    feedback.value = { message: 'Please complete the security check', type: 'error' }
+    return
+  }
+
   loading.value = true
   const startTime = Date.now()
 
-  const { error } = await login(trimmedEmail, currentPassword)
+  // 3. Pass token only if we are showing the captcha
+  const tokenToSend = showCaptcha.value ? token.value : undefined
+  const { error } = await login(trimmedEmail, currentPassword, tokenToSend)
 
   // Ensure minimum loading time
   const elapsedTime = Date.now() - startTime
@@ -114,9 +140,19 @@ const handleLogin = async () => {
   loading.value = false
 
   if (error) {
-    feedback.value = { message: error.message, type: 'error' }
+    // 4. Increment failure counter on error
+    failedAttempts.value++
+    token.value = '' // Reset token so they must do it again if visible
+
+    // Handle specific Supabase error messages
+    if (error.message.includes('Invalid login credentials')) {
+      feedback.value = { message: 'Incorrect email or password.', type: 'error' }
+    } else {
+      feedback.value = { message: error.message, type: 'error' }
+    }
   } else {
     feedback.value = { message: 'Login successful!', type: 'success' }
+    failedAttempts.value = 0 // Reset on success
   }
 }
 
@@ -132,7 +168,8 @@ const handleAnonymousSignIn = async () => {
     feedback.value = { message: error.message, type: 'error' }
   } else {
     // Successfully signed in as anonymous - navigate to home
-    await navigateTo('/')
+    const redirectPath = route.query.redirect as string
+    await navigateTo(redirectPath || '/')
   }
 }
 </script>

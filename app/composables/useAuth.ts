@@ -10,8 +10,14 @@ export const useAuth = () => {
     return await client.auth.signInAnonymously()
   }
 
-  const login = async (email: string, password: string) => {
-    return await client.auth.signInWithPassword({ email, password })
+  const login = async (email: string, password: string, captchaToken?: string) => {
+    return await client.auth.signInWithPassword({ 
+      email, 
+      password,
+      options: {
+        captchaToken
+      }
+    })
   }
 
   const convertAnonymousToUser = async (credentials: { email: string; password: string; username?: string }) => {
@@ -59,12 +65,12 @@ export const useAuth = () => {
     return { data, error }
   }
 
-  const register = async (credentials: { email: string; password: string; username: string }) => {
+  const register = async (credentials: { email: string; password: string; username: string; captchaToken?: string }) => {
     if (isAnonymous.value) {
       return convertAnonymousToUser(credentials)
     }
     
-    const { email, password, username } = credentials
+    const { email, password, username, captchaToken } = credentials
     return await client.auth.signUp({
       email,
       password,
@@ -73,6 +79,7 @@ export const useAuth = () => {
           username,
           full_name: username,
         },
+        captchaToken,
       },
     })
   }

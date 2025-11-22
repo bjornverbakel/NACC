@@ -4,8 +4,20 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/supabase',
     '@nuxthub/core',
-    'vuetify-nuxt-module'
+    'vuetify-nuxt-module',
+    '@nuxtjs/turnstile'
   ],
+
+  runtimeConfig: {
+    turnstile: {
+      secretKey: process.env.TURNSTILE_SECRET_KEY,
+    },
+    public: {
+      turnstile: {
+        siteKey: process.env.TURNSTILE_SITEKEY,
+      },
+    },
+  },
 
   css: ['~/assets/styles/main.scss'],
 
