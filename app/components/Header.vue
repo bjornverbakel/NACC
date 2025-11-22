@@ -4,12 +4,9 @@
       <v-app-bar-nav-icon @click="toggleDrawer"></v-app-bar-nav-icon>
     </template>
 
-    <v-app-bar-title class="text-h4">
+    <v-app-bar-title class="app-logo text-h5">
       <NuxtLink to="/" class="text-decoration-none d-inline-block" style="color: inherit">
-        NACC
-        <div v-if="$vuetify.display.smAndUp" class="text-body-2">
-          NieR: Automata Completion Checklist
-        </div>
+        Pod Data
       </NuxtLink>
     </v-app-bar-title>
 
@@ -91,5 +88,11 @@ const logout = async () => {
 #header {
   outline: 2px solid rgb(var(--v-theme-primary));
   outline-offset: 2px;
+}
+
+@media (max-width: 350px) {
+  .app-logo {
+    display: none;
+  }
 }
 </style>

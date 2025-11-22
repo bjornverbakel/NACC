@@ -70,7 +70,7 @@
 
 <script setup lang="ts">
 useHead({
-  title: 'Login | NACC',
+  title: 'Login | Pod Data',
 })
 
 const { isAnonymous, login, signInAnonymously } = useAuth()
