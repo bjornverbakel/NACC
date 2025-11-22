@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 useHead({
-  title: 'New Password | NACC',
+  title: 'New Password | Pod Data',
 })
 
 const password = ref('')

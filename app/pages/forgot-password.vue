@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 useHead({
-  title: 'Forgot Password | NACC',
+  title: 'Forgot Password | Pod Data',
 })
 
 const email = ref('')
