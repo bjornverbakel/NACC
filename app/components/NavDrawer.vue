@@ -1,13 +1,19 @@
 <template>
   <v-navigation-drawer v-model="drawer" class="border-0" id="navDrawer" app>
-    <v-list density="comfortable" nav>
+    <v-list density="compact" nav>
       <v-list-item prepend-icon="mdi-home" title="Home" to="/" />
+      <v-list-subheader>General</v-list-subheader>
       <v-list-item prepend-icon="mdi-book-open" title="Endings" to="/endings" />
       <v-list-item prepend-icon="mdi-map" title="Sidequests" to="/sidequests" />
       <v-list-item prepend-icon="mdi-trophy" title="Achievements" to="/achievements" />
+      <v-list-subheader>Equipment</v-list-subheader>
       <v-list-item prepend-icon="mdi-sword" title="Weapons" to="/weapons" />
       <v-list-item prepend-icon="mdi-chip" title="Pod Programs" to="/pod-programs" />
+      <v-list-subheader>Intel</v-list-subheader>
+      <v-list-item prepend-icon="mdi-archive" title="Archives" to="/archives" />
+      <v-list-item prepend-icon="mdi-book" title="Novels" to="/novels" />
       <v-list-item prepend-icon="mdi-robot-angry" title="Enemies" to="/enemies" />
+      <v-list-item prepend-icon="mdi-fish" title="Fish" to="/fish" />
 
       <!-- <v-list-item>
         <Button text="Home" icon="mdi-home" to="/" />

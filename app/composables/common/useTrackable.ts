@@ -25,8 +25,7 @@ export const useTrackable = (
     // Logged in - join with user table
     // We use any cast here because the dynamic string builder for the join
     // makes TypeScript lose the specific type inference, but the runtime behavior is correct.
-    const { data, error } = await client
-      .from(tableName)
+    const { data, error } = await (client.from(tableName) as any)
       .select(`
         *,
         ${userTableName}!left(completed, completed_at)

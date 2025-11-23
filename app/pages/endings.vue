@@ -7,6 +7,8 @@
     :headers="headers"
     :is-completed="isCompleted"
     :on-toggle="handleToggle"
+    group-by="type"
+    :group-order="['Main', 'Hidden', 'DLC']"
   />
 </template>
 
@@ -31,7 +33,6 @@ const headers: Header[] = [
   { title: 'Letter', key: 'letter', width: '1%' },
   { title: 'Name', key: 'name' },
   { title: 'Chapter', key: 'chapter', width: '20%' },
-  { title: 'Type', key: 'type', width: '10%' },
 ]
 </script>
 

@@ -64,6 +64,33 @@ export type Database = {
         }
         Relationships: []
       }
+      archives: {
+        Row: {
+          created_at: string | null
+          guide_url: string | null
+          id: string
+          name: string
+          sort_order: number
+          type: string
+        }
+        Insert: {
+          created_at?: string | null
+          guide_url?: string | null
+          id?: string
+          name: string
+          sort_order: number
+          type: string
+        }
+        Update: {
+          created_at?: string | null
+          guide_url?: string | null
+          id?: string
+          name?: string
+          sort_order?: number
+          type?: string
+        }
+        Relationships: []
+      }
       endings: {
         Row: {
           chapter: string
@@ -94,6 +121,120 @@ export type Database = {
           name?: string
           sort_order?: number
           type?: string
+        }
+        Relationships: []
+      }
+      enemies: {
+        Row: {
+          acquisition: string | null
+          created_at: string | null
+          guide_url: string | null
+          id: string
+          name: string
+          sort_order: number
+          type: string
+          variant: string | null
+        }
+        Insert: {
+          acquisition?: string | null
+          created_at?: string | null
+          guide_url?: string | null
+          id?: string
+          name: string
+          sort_order: number
+          type: string
+          variant?: string | null
+        }
+        Update: {
+          acquisition?: string | null
+          created_at?: string | null
+          guide_url?: string | null
+          id?: string
+          name?: string
+          sort_order?: number
+          type?: string
+          variant?: string | null
+        }
+        Relationships: []
+      }
+      fish: {
+        Row: {
+          created_at: string | null
+          guide_url: string | null
+          id: string
+          location: string[]
+          name: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string | null
+          guide_url?: string | null
+          id?: string
+          location: string[]
+          name: string
+          sort_order: number
+        }
+        Update: {
+          created_at?: string | null
+          guide_url?: string | null
+          id?: string
+          location?: string[]
+          name?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      novels: {
+        Row: {
+          acquisition: string
+          created_at: string | null
+          guide_url: string | null
+          id: string
+          name: string
+          sort_order: number
+        }
+        Insert: {
+          acquisition: string
+          created_at?: string | null
+          guide_url?: string | null
+          id?: string
+          name: string
+          sort_order: number
+        }
+        Update: {
+          acquisition?: string
+          created_at?: string | null
+          guide_url?: string | null
+          id?: string
+          name?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      pod_programs: {
+        Row: {
+          acquisition: string
+          created_at: string | null
+          guide_url: string | null
+          id: string
+          name: string
+          sort_order: number
+        }
+        Insert: {
+          acquisition: string
+          created_at?: string | null
+          guide_url?: string | null
+          id?: string
+          name: string
+          sort_order: number
+        }
+        Update: {
+          acquisition?: string
+          created_at?: string | null
+          guide_url?: string | null
+          id?: string
+          name?: string
+          sort_order?: number
         }
         Relationships: []
       }
@@ -192,6 +333,44 @@ export type Database = {
           },
         ]
       }
+      user_archives: {
+        Row: {
+          archive_id: string
+          completed: boolean | null
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          archive_id: string
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          archive_id?: string
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_archives_archive_id_fkey"
+            columns: ["archive_id"]
+            isOneToOne: false
+            referencedRelation: "archives"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_endings: {
         Row: {
           completed: boolean | null
@@ -226,6 +405,158 @@ export type Database = {
             columns: ["ending_id"]
             isOneToOne: false
             referencedRelation: "endings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_enemies: {
+        Row: {
+          completed: boolean | null
+          completed_at: string | null
+          created_at: string | null
+          enemy_id: string
+          id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          enemy_id: string
+          id?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          enemy_id?: string
+          id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_enemies_weapon_id_fkey1"
+            columns: ["enemy_id"]
+            isOneToOne: false
+            referencedRelation: "enemies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_fish: {
+        Row: {
+          completed: boolean | null
+          completed_at: string | null
+          created_at: string | null
+          fish_id: string
+          id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          fish_id: string
+          id?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          fish_id?: string
+          id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_fish_fish_id_fkey"
+            columns: ["fish_id"]
+            isOneToOne: false
+            referencedRelation: "fish"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_novels: {
+        Row: {
+          completed: boolean | null
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          novel_id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          novel_id: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          novel_id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_novels_novel_id_fkey"
+            columns: ["novel_id"]
+            isOneToOne: false
+            referencedRelation: "novels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_pod_programs: {
+        Row: {
+          completed: boolean | null
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          pod_program_id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          pod_program_id: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          pod_program_id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_pod_programs_pod_program_id_fkey"
+            columns: ["pod_program_id"]
+            isOneToOne: false
+            referencedRelation: "pod_programs"
             referencedColumns: ["id"]
           },
         ]
@@ -267,6 +598,74 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_weapons: {
+        Row: {
+          completed: boolean | null
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          updated_at: string | null
+          user_id: string
+          weapon_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id: string
+          weapon_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id?: string
+          weapon_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_weapons_weapon_id_fkey"
+            columns: ["weapon_id"]
+            isOneToOne: false
+            referencedRelation: "weapons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      weapons: {
+        Row: {
+          acquisition: string
+          created_at: string | null
+          guide_url: string | null
+          id: string
+          name: string
+          sort_order: number
+          type: string
+        }
+        Insert: {
+          acquisition: string
+          created_at?: string | null
+          guide_url?: string | null
+          id?: string
+          name: string
+          sort_order: number
+          type: string
+        }
+        Update: {
+          acquisition?: string
+          created_at?: string | null
+          guide_url?: string | null
+          id?: string
+          name?: string
+          sort_order?: number
+          type?: string
+        }
+        Relationships: []
       }
     }
     Views: {

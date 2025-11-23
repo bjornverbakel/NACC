@@ -47,6 +47,7 @@ export const vuetifyConfig = {
           "on-surface": "#47453D",
           "on-background": "#47453D",
           "on-primary": "#C4C0A9",
+          "on-secondary": "#47453D",
         },
       },
     },

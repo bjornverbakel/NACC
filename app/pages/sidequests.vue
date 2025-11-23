@@ -49,7 +49,7 @@ const {
 const headers: Header[] = [
   { title: 'Name', key: 'name' },
   { title: 'Clearable By', slot: 'clearable-by', width: '16%' },
-  { title: 'Client / Location', slot: 'client-location', width: '20%' },
+  { title: 'Client / Location', slot: 'client-location', width: '25%' },
   { title: 'Chapter', key: 'chapter', width: '15%' },
 ]
 

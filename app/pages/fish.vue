@@ -1,0 +1,53 @@
+<template>
+  <AppChecklist
+    title="Fish"
+    :items="fish"
+    :loading="loading"
+    :error="error"
+    :headers="headers"
+    :is-completed="isCompleted"
+    :on-toggle="handleToggle"
+  >
+    <template #location="{ item }">
+      <div class="d-flex flex-column ga-1 py-2">
+        <div v-for="loc in item.location" :key="loc">
+          {{ splitLocation(loc).main }}
+          <span class="text-medium-emphasis">{{ splitLocation(loc).sub }}</span>
+        </div>
+      </div>
+    </template>
+  </AppChecklist>
+</template>
+
+<script lang="ts" setup>
+useHead({
+  title: 'Fish | Pod Data',
+})
+
+import type { Header } from '~/components/AppChecklist.vue'
+
+const { getAllFishWithStatus, toggleFish } = useFish()
+const {
+  items: fish,
+  loading,
+  error,
+  isCompleted,
+  handleToggle,
+} = useChecklist(getAllFishWithStatus, toggleFish, 'user_fish')
+
+const headers: Header[] = [
+  { title: 'Name', key: 'name', width: '25%' },
+  { title: 'Location', key: 'location', slot: 'location' },
+]
+
+const splitLocation = (loc: string) => {
+  const index = loc.indexOf('(')
+  if (index === -1) return { main: loc, sub: '' }
+  return {
+    main: loc.slice(0, index),
+    sub: loc.slice(index),
+  }
+}
+</script>
+
+<style></style>

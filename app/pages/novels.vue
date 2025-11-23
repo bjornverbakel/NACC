@@ -1,7 +1,7 @@
 <template>
   <AppChecklist
-    title="Pod Programs"
-    :items="podPrograms"
+    title="Novels"
+    :items="novels"
     :loading="loading"
     :error="error"
     :headers="headers"
@@ -12,22 +12,22 @@
 
 <script lang="ts" setup>
 useHead({
-  title: 'Pod Programs | Pod Data',
+  title: 'Novels | Pod Data',
 })
 
 import type { Header } from '~/components/AppChecklist.vue'
 
-const { getAllPodProgramsWithStatus, togglePodProgram } = usePodPrograms()
+const { getAllNovelsWithStatus, toggleNovel } = useNovels()
 const {
-  items: podPrograms,
+  items: novels,
   loading,
   error,
   isCompleted,
   handleToggle,
-} = useChecklist(getAllPodProgramsWithStatus, togglePodProgram, 'user_pod_programs')
+} = useChecklist(getAllNovelsWithStatus, toggleNovel, 'user_novels')
 
 const headers: Header[] = [
-  { title: 'Name', key: 'name', width: '15%' },
+  { title: 'Name', key: 'name', width: '25%' },
   { title: 'Acquisition', key: 'acquisition' },
 ]
 </script>
