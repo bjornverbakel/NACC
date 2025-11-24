@@ -44,7 +44,7 @@
       </p>
       <div class="d-flex ga-2 justify-space-around text-body-2 w-100">
         <v-btn
-          variant="text"
+          variant="plain"
           density="compact"
           class="text-medium-emphasis text-decoration-none"
           to="about"
