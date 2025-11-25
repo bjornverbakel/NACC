@@ -2,6 +2,7 @@
   <v-navigation-drawer v-model="drawer" class="border-0" id="navDrawer" app>
     <v-list density="compact" nav class="d-flex flex-column overflow-y-auto">
       <v-list-item prepend-icon="mdi-home" title="Home" to="/" />
+      <v-list-item prepend-icon="mdi-information" title="About" to="/about" />
       <v-list-subheader>General</v-list-subheader>
       <v-list-item
         v-for="category in generalCategories"
@@ -42,19 +43,18 @@
         Pod Data is an unofficial checklist for tracking your completion progress in
         <em>NieR: Automata</em>.
       </p>
-      <div class="d-flex ga-2 justify-space-around text-body-2 w-100">
+      <div class="d-flex ga-2 justify-space-between text-body-2 w-100">
         <v-btn
           variant="plain"
           density="compact"
-          class="text-medium-emphasis text-decoration-none"
-          to="about"
+          class="text-medium-emphasis text-decoration-none pa-1"
         >
-          About
+          Contact
         </v-btn>
         <v-btn
           variant="plain"
           density="compact"
-          class="text-medium-emphasis text-decoration-none"
+          class="text-medium-emphasis text-decoration-none pa-1"
           to="disclaimer"
         >
           Disclaimer

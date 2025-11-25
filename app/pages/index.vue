@@ -1,8 +1,20 @@
 <template>
-  <div>
-    <h1 class="main-header">Pod Data</h1>
-    <h2 class="sub-header mt-1">Unofficial completion checklist for NieR: Automata</h2>
+  <div class="mb-8 d-flex flex-column ga-4">
+    <div>
+      <h1 class="main-header">Pod Data</h1>
+      <h2 class="sub-header mt-1">Unofficial completion checklist for NieR: Automata</h2>
+    </div>
+
+    <p>
+      This website is an unofficial checklist for tracking your completion progress in
+      <em>NieR: Automata</em>. It allows you to mark various items, quests, and achievements as
+      completed, helping you keep track of what you've done and what still needs to be accomplished.
+    </p>
+
+    <v-btn class="w-fit" variant="flat" to="/about">Read More</v-btn>
   </div>
+
+  <h1 class="main-header">Overall Progress</h1>
 
   <AppAlert
     v-if="error"
@@ -36,15 +48,6 @@
         <div class="text-caption mt-2">{{ Math.round(category.progress) }}% Complete</div>
       </v-card-text>
     </v-card>
-  </div>
-
-  <div class="mt-8">
-    <h1 class="main-header">Info</h1>
-    <p class="mt-4">
-      This website is an unofficial checklist for tracking your completion progress in
-      <em>NieR: Automata</em>. It allows you to mark various items, quests, and achievements as
-      completed, helping you keep track of what you've done and what still needs to be accomplished.
-    </p>
   </div>
 </template>
 
