@@ -35,12 +35,12 @@ SELECT set_config('role', 'authenticated', true);
 INSERT INTO public.profiles (id, username)
 VALUES ('11111111-1111-1111-1111-111111111111', 'user_a');
 SELECT results_eq(
-        $ $
+        $$
         SELECT username
         FROM public.profiles
-        WHERE id = '11111111-1111-1111-1111-111111111111' $ $,
-            $ $
-        VALUES ('user_a'::text) $ $,
+        WHERE id = '11111111-1111-1111-1111-111111111111' $$,
+            $$
+        VALUES ('user_a'::text) $$,
             'User A can create and read their own profile'
     );
 -- 3. User A marks ending as completed
@@ -51,12 +51,12 @@ VALUES (
         true
     );
 SELECT results_eq(
-        $ $
+        $$
         SELECT count(*)
         FROM public.user_endings
-        WHERE user_id = '11111111-1111-1111-1111-111111111111' $ $,
-            $ $
-        VALUES (1::bigint) $ $,
+        WHERE user_id = '11111111-1111-1111-1111-111111111111' $$,
+            $$
+        VALUES (1::bigint) $$,
             'User A can create and read their own user_endings'
     );
 -- 4. Authenticate as User B
@@ -68,22 +68,22 @@ SELECT set_config(
 SELECT set_config('role', 'authenticated', true);
 -- 5. User B tries to read User A's profile
 SELECT results_eq(
-        $ $
+        $$
         SELECT count(*)
         FROM public.profiles
-        WHERE id = '11111111-1111-1111-1111-111111111111' $ $,
-            $ $
-        VALUES (0::bigint) $ $,
+        WHERE id = '11111111-1111-1111-1111-111111111111' $$,
+            $$
+        VALUES (0::bigint) $$,
             'User B cannot see User A profile'
     );
 -- 6. User B tries to read User A's user_endings
 SELECT results_eq(
-        $ $
+        $$
         SELECT count(*)
         FROM public.user_endings
-        WHERE user_id = '11111111-1111-1111-1111-111111111111' $ $,
-            $ $
-        VALUES (0::bigint) $ $,
+        WHERE user_id = '11111111-1111-1111-1111-111111111111' $$,
+            $$
+        VALUES (0::bigint) $$,
             'User B cannot see User A user_endings'
     );
 -- 7. User B tries to insert data for User A
@@ -103,21 +103,21 @@ SELECT set_config('request.jwt.claims', '', true);
 SELECT set_config('role', 'anon', true);
 -- 9. Anon can read endings
 SELECT results_eq(
-        $ $
+        $$
         SELECT count(*)
         FROM public.endings
-        WHERE id = '33333333-3333-3333-3333-333333333333' $ $,
-            $ $
-        VALUES (1::bigint) $ $,
+        WHERE id = '33333333-3333-3333-3333-333333333333' $$,
+            $$
+        VALUES (1::bigint) $$,
             'Anonymous user can read endings'
     );
 -- 10. Anon cannot read profiles
 SELECT results_eq(
-        $ $
+        $$
         SELECT count(*)
-        FROM public.profiles $ $,
-            $ $
-        VALUES (0::bigint) $ $,
+        FROM public.profiles $$,
+            $$
+        VALUES (0::bigint) $$,
             'Anonymous user cannot read profiles'
     );
 SELECT *

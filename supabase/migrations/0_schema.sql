@@ -16,30 +16,30 @@ CREATE EXTENSION IF NOT EXISTS "supabase_vault" WITH SCHEMA "vault";
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 CREATE OR REPLACE FUNCTION "public"."get_user_id"() RETURNS "uuid" LANGUAGE "sql" STABLE SECURITY DEFINER
 SET "search_path" TO 'public',
-  'pg_temp' AS $ function $
+  'pg_temp' AS $$
 SELECT auth.uid();
-$ function $;
+$$;
 ALTER FUNCTION "public"."get_user_id"() OWNER TO "postgres";
 CREATE OR REPLACE FUNCTION "public"."handle_new_user"() RETURNS "trigger" LANGUAGE "plpgsql"
 SET "search_path" TO 'public',
-  'pg_catalog' AS $ function $ BEGIN -- body preserved: call public.set_search_path_public to ensure behavior
+  'pg_catalog' AS $$ BEGIN -- body preserved: call public.set_search_path_public to ensure behavior
   PERFORM public.set_search_path_public();
 RETURN NEW;
 END;
-$ function $;
+$$;
 ALTER FUNCTION "public"."handle_new_user"() OWNER TO "postgres";
 CREATE OR REPLACE FUNCTION "public"."profiles_updated_at"() RETURNS "trigger" LANGUAGE "plpgsql" SECURITY DEFINER
 SET "search_path" TO 'public',
-  'pg_catalog' AS $ function $ BEGIN NEW.updated_at = now();
+  'pg_catalog' AS $$ BEGIN NEW.updated_at = now();
 RETURN NEW;
 END;
-$ function $;
+$$;
 ALTER FUNCTION "public"."profiles_updated_at"() OWNER TO "postgres";
 CREATE OR REPLACE FUNCTION "public"."set_search_path_public"() RETURNS "void" LANGUAGE "sql"
 SET "search_path" TO 'public',
-  'pg_catalog' AS $ function $ -- intentionally minimal: ensure search_path is public,pg_catalog within session
+  'pg_catalog' AS $$ -- intentionally minimal: ensure search_path is public,pg_catalog within session
 SELECT set_config('search_path', 'public, pg_catalog', true);
-$ function $;
+$$;
 ALTER FUNCTION "public"."set_search_path_public"() OWNER TO "postgres";
 ALTER PUBLICATION "supabase_realtime" OWNER TO "postgres";
 GRANT USAGE ON SCHEMA "public" TO "postgres";

@@ -1,11 +1,11 @@
 -- Update the handle_new_user function to insert into profiles
 CREATE OR REPLACE FUNCTION public.handle_new_user() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER
-SET search_path = public AS $ function $ BEGIN
+SET search_path = public AS $$ BEGIN
 INSERT INTO public.profiles (id, username)
 VALUES (new.id, new.raw_user_meta_data->>'username');
 RETURN new;
 END;
-$ function $;
+$$;
 -- Create the trigger if it doesn't exist
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
