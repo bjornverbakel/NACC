@@ -5,12 +5,12 @@ import { SpeedInsights } from '@vercel/speed-insights/nuxt'
 
 <template>
   <v-app>
-    <!-- Vercel Analytics and Speed Insights -->
-    <Analytics />
-    <SpeedInsights />
-
-    <!-- Main Application Layout -->
     <NuxtLayout>
+      <!-- Vercel Analytics and Speed Insights -->
+      <Analytics />
+      <SpeedInsights />
+
+      <!-- Main page -->
       <NuxtPage />
     </NuxtLayout>
   </v-app>
