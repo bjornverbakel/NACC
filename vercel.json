@@ -2,12 +2,8 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
-      "source": "/_vercel/insights/:match*",
-      "destination": "https://dns.surf/_vercel/insights/:match*"
-    },
-    {
-      "source": "/_vercel/speed-insights/:match*",
-      "destination": "https://dns.surf/_vercel/insights/:match*"
+      "source": "/monitor/:match*",
+      "destination": "https://poddata.net/_vercel/:match*"
     }
   ]
 }
