@@ -30,6 +30,8 @@ This is a completion checklist app for **NieR: Automata**, available at [poddata
    pnpm dev
    ```
 
+More instructions can be found [here](/docs/CHEATSHEET.md).
+
 ## Resources & Acknowledgements
 
 - [FextraLife NieR: Automata Wiki](https://nierautomata.wiki.fextralife.com/Nier+Automata+Wiki) - Data & guides
