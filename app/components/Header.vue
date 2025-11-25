@@ -15,7 +15,9 @@
       <div v-if="user && isAnonymous" class="d-flex align-center ga-2">
         <v-chip color="warning" size="small" prepend-icon="mdi-incognito"> Guest Mode </v-chip>
         <v-btn color="secondary" to="/register" prepend-icon="mdi-account-plus"> Sign up </v-btn>
-        <v-btn color="secondary" @click="logout" icon="mdi-logout" :loading="loading"></v-btn>
+        <DevOnly>
+          <v-btn color="secondary" @click="logout" icon="mdi-logout" :loading="loading"></v-btn>
+        </DevOnly>
       </div>
 
       <!-- Normal logged in user: Show profile -->
