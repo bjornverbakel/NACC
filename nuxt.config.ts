@@ -3,7 +3,6 @@ import { vuetifyConfig } from './vuetify.config'
 export default defineNuxtConfig({
   modules: [
     '@nuxtjs/supabase',
-    '@nuxthub/core',
     'vuetify-nuxt-module',
     '@nuxtjs/turnstile'
   ],
@@ -63,4 +62,8 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: '2025-02-19',
+
+  nitro: {
+    preset: 'vercel',
+  },
 });

@@ -24,9 +24,10 @@
       <div v-else-if="user" class="d-flex align-center ga-2">
         <!-- Desktop: Show email and logout button -->
         <div v-if="$vuetify.display.mdAndUp" class="d-flex align-center ga-2">
-          <span class="text-body-2"
-            ><v-icon start icon="mdi-account" />{{ profile?.username || user.email }}</span
-          >
+          <span class="text-body-2">
+            <v-icon start icon="mdi-account" />
+            {{ profile?.username || user.email }}
+          </span>
           <v-btn color="secondary" @click="logout" icon="mdi-logout" :loading="loading"></v-btn>
         </div>
 
@@ -37,9 +38,9 @@
           </template>
           <v-list style="max-width: 400px">
             <v-list-item prepend-icon="mdi-account" title="Logged in as">
-              <v-list-item-subtitle class="text-body-1">{{
-                profile?.username || user.email
-              }}</v-list-item-subtitle>
+              <v-list-item-subtitle class="text-body-1">
+                {{ profile?.username || user.email }}
+              </v-list-item-subtitle>
             </v-list-item>
             <v-divider class="my-2" />
             <v-list-item @click="logout">
