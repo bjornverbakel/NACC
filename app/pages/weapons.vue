@@ -3,7 +3,7 @@
     title="Weapons"
     :items="weapons"
     :loading="loading"
-    :error="error"
+    v-model:feedback="feedback"
     :headers="headers"
     :is-completed="isCompleted"
     :on-toggle="handleToggle"
@@ -24,7 +24,7 @@ const { getAllWeaponsWithStatus, toggleWeapon } = useWeapons()
 const {
   items: weapons,
   loading,
-  error,
+  feedback,
   isCompleted,
   handleToggle,
 } = useChecklist(getAllWeaponsWithStatus, toggleWeapon, 'user_weapons')

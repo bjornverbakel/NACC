@@ -6,9 +6,8 @@
       <v-form class="d-flex flex-column ga-4" @submit.prevent="handleResetPassword">
         <AppAlert
           v-if="feedback.message"
-          :message="feedback.message"
+          v-model:message="feedback.message"
           :type="feedback.type"
-          @clear="clearFeedback"
         />
 
         <v-text-field
@@ -70,9 +69,5 @@ const handleResetPassword = async () => {
 
   // Always show success message to prevent email enumeration via error messages (like rate limits)
   feedback.value = { message: 'Please check your email for the reset link.', type: 'success' }
-}
-
-const clearFeedback = () => {
-  feedback.value.message = ''
 }
 </script>

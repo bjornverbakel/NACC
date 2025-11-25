@@ -6,9 +6,8 @@
       <v-form class="d-flex flex-column ga-4" @submit.prevent="updatepassword">
         <AppAlert
           v-if="feedback.message"
-          :message="feedback.message"
+          v-model:message="feedback.message"
           :type="feedback.type"
-          @clear="clearFeedback"
         />
 
         <v-text-field
@@ -120,9 +119,5 @@ const updatepassword = async () => {
       navigateTo('/login')
     }, 2000)
   }
-}
-
-const clearFeedback = () => {
-  feedback.value.message = ''
 }
 </script>

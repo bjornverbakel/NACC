@@ -4,9 +4,14 @@
     <h2 class="sub-header mt-1">Unofficial completion checklist for NieR: Automata</h2>
   </div>
 
-  <div v-if="error">
-    <v-alert type="error" class="mb-4">{{ error }}</v-alert>
-  </div>
+  <AppAlert
+    v-if="error"
+    type="error"
+    class="mb-4"
+    :message="error"
+    :closable="false"
+    @clear="error = ''"
+  />
 
   <div class="dashboard-grid">
     <v-skeleton-loader v-if="loading" v-for="n in 9" type="article" height="156" />

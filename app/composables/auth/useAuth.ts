@@ -14,7 +14,7 @@ export const useAuth = () => {
     try {
       await $fetch('/api/verify-captcha', {
         method: 'POST',
-        body: { token }
+        body: { token },
       })
       return true
     } catch (e) {
@@ -26,22 +26,30 @@ export const useAuth = () => {
     if (captchaToken) {
       const isValid = await verifyCaptcha(captchaToken)
       if (!isValid) {
-        return { data: { user: null, session: null }, error: { message: 'Security check failed. Please try again.' } }
+        return {
+          data: { user: null, session: null },
+          error: { message: 'Security check failed. Please try again.' },
+        }
       }
     }
 
-    return await client.auth.signInWithPassword({ 
-      email, 
+    return await client.auth.signInWithPassword({
+      email,
       password,
       options: {
-        captchaToken
-      }
+        captchaToken,
+      },
     })
   }
 
-  const convertAnonymousToUser = async (credentials: { email: string; password: string; username?: string; captchaToken?: string }) => {
+  const convertAnonymousToUser = async (credentials: {
+    email: string
+    password: string
+    username?: string
+    captchaToken?: string
+  }) => {
     const { email, password, username, captchaToken } = credentials
-    
+
     if (!isAnonymous.value) {
       return { error: new Error('User is not anonymous') }
     }
@@ -53,7 +61,11 @@ export const useAuth = () => {
       }
     }
 
-    const updateData: { email: string; password: string; data?: { username: string; full_name: string } } = {
+    const updateData: {
+      email: string
+      password: string
+      data?: { username: string; full_name: string }
+    } = {
       email,
       password,
     }
@@ -75,7 +87,7 @@ export const useAuth = () => {
         })
         .select()
         .single()
-      
+
       if (profileError) {
         console.error('Profile update error:', profileError)
         return { data: null, error: profileError }
@@ -91,17 +103,25 @@ export const useAuth = () => {
     return { data, error }
   }
 
-  const register = async (credentials: { email: string; password: string; username: string; captchaToken?: string }) => {
+  const register = async (credentials: {
+    email: string
+    password: string
+    username: string
+    captchaToken?: string
+  }) => {
     if (isAnonymous.value) {
       return convertAnonymousToUser(credentials)
     }
-    
+
     const { email, password, username, captchaToken } = credentials
 
     if (captchaToken) {
       const isValid = await verifyCaptcha(captchaToken)
       if (!isValid) {
-        return { data: { user: null, session: null }, error: { message: 'Security check failed. Please try again.' } }
+        return {
+          data: { user: null, session: null },
+          error: { message: 'Security check failed. Please try again.' },
+        }
       }
     }
 

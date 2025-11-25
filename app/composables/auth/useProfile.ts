@@ -14,11 +14,7 @@ export const useProfile = () => {
       return
     }
 
-    const { data, error } = await client
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .maybeSingle()
+    const { data, error } = await client.from('profiles').select('*').eq('id', userId).maybeSingle()
 
     if (error) {
       console.error('Error fetching profile:', error)
@@ -31,7 +27,7 @@ export const useProfile = () => {
   // Fetch profile when user changes
   watch(
     () => user.value?.id || user.value?.sub,
-    (userId) => {
+    userId => {
       if (userId) {
         fetchProfile()
       } else {

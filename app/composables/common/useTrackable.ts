@@ -14,10 +14,7 @@ export const useTrackable = (
     if (!userId) {
       // Not logged in
       // Return items without status
-      const { data, error } = await client
-        .from(tableName)
-        .select('*')
-        .order('sort_order')
+      const { data, error } = await client.from(tableName).select('*').order('sort_order')
 
       return { data, error }
     }
@@ -26,10 +23,12 @@ export const useTrackable = (
     // We use any cast here because the dynamic string builder for the join
     // makes TypeScript lose the specific type inference, but the runtime behavior is correct.
     const { data, error } = await (client.from(tableName) as any)
-      .select(`
+      .select(
+        `
         *,
         ${userTableName}!left(completed, completed_at)
-      `)
+      `
+      )
       .eq(`${userTableName}.user_id`, userId)
       .order('sort_order')
 

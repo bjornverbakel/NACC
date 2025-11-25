@@ -15,9 +15,8 @@
 
         <AppAlert
           v-if="feedback.message"
-          :message="feedback.message"
+          v-model:message="feedback.message"
           :type="feedback.type"
-          @clear="clearFeedback"
         />
 
         <v-text-field
@@ -180,10 +179,6 @@ const handleSignUp = async () => {
       type: 'success',
     }
   }
-}
-
-const clearFeedback = () => {
-  feedback.value.message = ''
 }
 
 const handleAnonymousSignIn = async () => {

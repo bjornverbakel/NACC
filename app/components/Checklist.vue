@@ -4,6 +4,14 @@
     <h2 v-if="subtitle" class="sub-header mt-1">{{ subtitle }}</h2>
   </div>
 
+  <AppAlert
+    v-if="feedback.message"
+    v-model:message="feedback.message"
+    :type="feedback.type || 'error'"
+    :closable="closable ?? false"
+    @clear="$emit('update:feedback', { ...feedback, message: '' })"
+  />
+
   <div class="font-mono text-uppercase">
     <div class="d-flex justify-space-between mb-1">
       <span v-if="loading">[STATUS: LOADING...]</span>
@@ -21,10 +29,6 @@
       </template>
     </v-progress-linear>
   </div>
-
-  <v-alert v-if="error" type="error">
-    {{ error }}
-  </v-alert>
 
   <div class="d-flex flex-column flex-sm-row ga-4 justify-space-between">
     <v-text-field
@@ -132,13 +136,16 @@ const props = defineProps<{
   subtitle?: string
   items: any[]
   loading: boolean
-  error: string
+  feedback: { message: string; type: 'success' | 'error' | 'info' | 'warning' }
   headers: Header[]
   isCompleted: (item: any) => boolean
   onToggle: (item: any, completed: boolean) => void
   groupBy?: string
   groupOrder?: string[]
+  closable?: boolean
 }>()
+
+defineEmits(['update:feedback'])
 
 const tableHeaders = computed(() => [
   { title: 'Done', key: 'done', width: '1%', sortable: false },

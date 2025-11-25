@@ -3,7 +3,7 @@
     title="Archives"
     :items="archives"
     :loading="loading"
-    :error="error"
+    v-model:feedback="feedback"
     :headers="headers"
     :is-completed="isCompleted"
     :on-toggle="handleToggle"
@@ -30,7 +30,7 @@ const { getAllArchivesWithStatus, toggleArchive } = useArchives()
 const {
   items: archives,
   loading,
-  error,
+  feedback,
   isCompleted,
   handleToggle,
 } = useChecklist(getAllArchivesWithStatus, toggleArchive, 'user_archives')

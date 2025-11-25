@@ -3,7 +3,7 @@
     title="Endings"
     :items="endings"
     :loading="loading"
-    :error="error"
+    v-model:feedback="feedback"
     :headers="headers"
     :is-completed="isCompleted"
     :on-toggle="handleToggle"
@@ -24,7 +24,7 @@ const { getAllEndingsWithStatus, toggleEnding } = useEndings()
 const {
   items: endings,
   loading,
-  error,
+  feedback,
   isCompleted,
   handleToggle,
 } = useChecklist(getAllEndingsWithStatus, toggleEnding, 'user_endings')

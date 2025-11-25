@@ -3,7 +3,7 @@
     title="Fish"
     :items="fish"
     :loading="loading"
-    :error="error"
+    v-model:feedback="feedback"
     :headers="headers"
     :is-completed="isCompleted"
     :on-toggle="handleToggle"
@@ -30,7 +30,7 @@ const { getAllFishWithStatus, toggleFish } = useFish()
 const {
   items: fish,
   loading,
-  error,
+  feedback,
   isCompleted,
   handleToggle,
 } = useChecklist(getAllFishWithStatus, toggleFish, 'user_fish')

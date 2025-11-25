@@ -3,7 +3,7 @@
     title="Pod Programs"
     :items="podPrograms"
     :loading="loading"
-    :error="error"
+    v-model:feedback="feedback"
     :headers="headers"
     :is-completed="isCompleted"
     :on-toggle="handleToggle"
@@ -21,7 +21,7 @@ const { getAllPodProgramsWithStatus, togglePodProgram } = usePodPrograms()
 const {
   items: podPrograms,
   loading,
-  error,
+  feedback,
   isCompleted,
   handleToggle,
 } = useChecklist(getAllPodProgramsWithStatus, togglePodProgram, 'user_pod_programs')

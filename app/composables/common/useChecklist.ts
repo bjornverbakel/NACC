@@ -6,14 +6,14 @@ export const useChecklist = <T extends { id: any }>(
   const user = useSupabaseUser()
   const items = ref<T[]>([])
   const loading = ref(true)
-  const error = ref('')
+  const feedback = ref({ message: '', type: 'error' as 'success' | 'error' | 'info' | 'warning' })
 
   const fetchItems = async () => {
-    error.value = ''
+    feedback.value = { message: '', type: 'error' }
     const { data, error: fetchError } = await fetcher()
 
     if (fetchError) {
-      error.value = fetchError.message
+      feedback.value = { message: fetchError.message, type: 'error' }
     } else if (data) {
       items.value = data
     }
@@ -32,7 +32,7 @@ export const useChecklist = <T extends { id: any }>(
     if (!user.value) {
       return navigateTo({
         path: '/login',
-        query: { redirect: useRoute().fullPath }
+        query: { redirect: useRoute().fullPath },
       })
     }
 
@@ -44,9 +44,7 @@ export const useChecklist = <T extends { id: any }>(
         currentItem[userRelationKey] = [{ completed, completed_at: null }]
       } else {
         currentItem[userRelationKey][0].completed = completed
-        currentItem[userRelationKey][0].completed_at = completed
-          ? new Date().toISOString()
-          : null
+        currentItem[userRelationKey][0].completed_at = completed ? new Date().toISOString() : null
       }
     }
 
@@ -54,7 +52,7 @@ export const useChecklist = <T extends { id: any }>(
     const { error: toggleError } = await toggler(item.id, completed)
 
     if (toggleError) {
-      error.value = `Error updating item: ${toggleError.message}`
+      feedback.value = { message: `Error updating item: ${toggleError.message}`, type: 'error' }
       await fetchItems()
     }
   }
@@ -65,8 +63,8 @@ export const useChecklist = <T extends { id: any }>(
   return {
     items,
     loading,
-    error,
+    feedback,
     isCompleted,
-    handleToggle
+    handleToggle,
   }
 }

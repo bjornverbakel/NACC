@@ -3,7 +3,7 @@
     title="Sidequests"
     :items="sidequests"
     :loading="loading"
-    :error="error"
+    v-model:feedback="feedback"
     :headers="headers"
     :is-completed="isCompleted"
     :on-toggle="handleToggle"
@@ -41,7 +41,7 @@ const { getAllSidequestsWithStatus, toggleSidequest } = useSidequests()
 const {
   items: sidequests,
   loading,
-  error,
+  feedback,
   isCompleted,
   handleToggle,
 } = useChecklist(getAllSidequestsWithStatus, toggleSidequest, 'user_sidequests')
@@ -52,7 +52,6 @@ const headers: Header[] = [
   { title: 'Client / Location', slot: 'client-location', width: '25%' },
   { title: 'Chapter', key: 'chapter', width: '15%' },
 ]
-
 const getCharacterColor = (char: string) => {
   switch (char) {
     case '2B':

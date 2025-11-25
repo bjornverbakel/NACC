@@ -4,7 +4,9 @@
     :type="props.type"
     :variant="props.variant"
     :closable="props.closable"
-    @click:close="$emit('clear')"
+    border="start"
+    :border-color="props.type"
+    @click:close="onClose"
   >
     {{ props.message }}
   </v-alert>
@@ -25,11 +27,17 @@ const props = withDefaults(
   }
 )
 
-defineEmits(['clear'])
+const emit = defineEmits(['clear', 'update:message'])
+
+const onClose = () => {
+  emit('clear')
+  emit('update:message', '')
+}
 </script>
 
 <style scoped>
 .v-alert {
   min-height: fit-content;
+  flex: 0 0 !important;
 }
 </style>

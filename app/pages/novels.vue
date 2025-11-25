@@ -3,7 +3,7 @@
     title="Novels"
     :items="novels"
     :loading="loading"
-    :error="error"
+    v-model:feedback="feedback"
     :headers="headers"
     :is-completed="isCompleted"
     :on-toggle="handleToggle"
@@ -21,7 +21,7 @@ const { getAllNovelsWithStatus, toggleNovel } = useNovels()
 const {
   items: novels,
   loading,
-  error,
+  feedback,
   isCompleted,
   handleToggle,
 } = useChecklist(getAllNovelsWithStatus, toggleNovel, 'user_novels')

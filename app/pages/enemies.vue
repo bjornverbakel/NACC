@@ -3,7 +3,7 @@
     title="Enemies"
     :items="enemies"
     :loading="loading"
-    :error="error"
+    v-model:feedback="feedback"
     :headers="headers"
     :is-completed="isCompleted"
     :on-toggle="handleToggle"
@@ -37,7 +37,7 @@ const { getAllEnemiesWithStatus, toggleEnemy } = useEnemies()
 const {
   items: enemies,
   loading,
-  error,
+  feedback,
   isCompleted,
   handleToggle,
 } = useChecklist(getAllEnemiesWithStatus, toggleEnemy, 'user_enemies')

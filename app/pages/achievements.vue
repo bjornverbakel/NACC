@@ -3,7 +3,7 @@
     title="Achievements"
     :items="achievements"
     :loading="loading"
-    :error="error"
+    v-model:feedback="feedback"
     :headers="headers"
     :is-completed="isCompleted"
     :on-toggle="handleToggle"
@@ -26,7 +26,7 @@ const { getAllAchievementsWithStatus, toggleAchievement } = useAchievements()
 const {
   items: achievements,
   loading,
-  error,
+  feedback,
   isCompleted,
   handleToggle,
 } = useChecklist(getAllAchievementsWithStatus, toggleAchievement, 'user_achievements')
