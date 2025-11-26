@@ -1,0 +1,17 @@
+@mixin text-truncate {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+@mixin text-xs-truncate {
+  @media (max-width: 300px) {
+    @include text-truncate;
+  }
+}
+
+@mixin text-xxs-truncate {
+  @media (max-width: 200px) {
+    @include text-truncate;
+  }
+}

@@ -32,9 +32,9 @@
       <div class="pa-4 pb-2">
         <v-icon size="32">{{ category.icon }}</v-icon>
       </div>
-      <v-card-title class="d-flex align-center justify-space-between">
-        <span>{{ category.name }}</span>
-        <v-chip size="small" variant="flat">
+      <v-card-title class="d-flex align-center justify-space-between ga-2">
+        <span class="text-truncate">{{ category.name }}</span>
+        <v-chip size="small" variant="flat" class="min-w-min">
           {{ category.completed }} / {{ category.total }}
         </v-chip>
       </v-card-title>
@@ -112,7 +112,26 @@ watch(user, fetchAllStats)
 <style scoped>
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  /* Default: 1 column for smallest screens (or without media query support) */
+  grid-template-columns: repeat(1, 1fr);
   gap: 1rem;
+}
+
+/* --- */
+
+/* Medium screens (e.g., tablets) - Transition to 2 columns */
+@media (min-width: 600px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* --- */
+
+/* Large screens (e.g., desktops) - Transition to 3 columns */
+@media (min-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 </style>

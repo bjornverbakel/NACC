@@ -13,12 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import { useDisplay } from 'vuetify'
+const drawer = ref(false)
 
-const { lgAndUp } = useDisplay()
-const drawer = ref(lgAndUp.value) // Open drawer by default on large screens
-
-// Make drawer accessible globally via provide/inject
 provide('drawer', drawer)
 </script>
 

@@ -21,32 +21,71 @@ body {
   font-family: $font-family-mono !important;
   letter-spacing: 1px !important;
 }
+
 .h-screen-content {
   min-height: calc(100vh - 64px);
 }
 
+.text-xs-truncate {
+  @include text-xs-truncate;
+}
+
 .h-fit {
-  height: fit-content;
+  height: fit-content !important;
 }
 
 .h-max {
-  height: max-content;
+  height: max-content !important;
 }
 
 .h-min {
-  height: min-content;
+  height: min-content !important;
 }
 
 .w-fit {
-  width: fit-content;
+  width: fit-content !important;
 }
 
 .w-max {
-  width: max-content;
+  width: max-content !important;
 }
 
 .w-min {
-  width: min-content;
+  width: min-content !important;
+}
+
+.min-h-fit {
+  min-height: fit-content !important;
+}
+
+.min-h-max {
+  min-height: max-content !important;
+}
+
+.min-h-min {
+  min-height: min-content !important;
+}
+
+.min-w-fit {
+  min-width: -webkit-fill-available;
+}
+
+.min-w-max {
+  min-width: max-content !important;
+}
+
+.min-w-min {
+  min-width: min-content !important;
+}
+
+.w-unset {
+  width: unset !important;
+}
+
+.w-xs-unset {
+  @media (min-width: 360px) {
+    width: unset !important;
+  }
 }
 
 ul {
@@ -106,16 +145,18 @@ li {
 .main-header {
   text-shadow: 4px 4px rgba(0, 0, 0, 0.1);
   text-transform: uppercase;
-  font-size: 3rem;
+  font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 500;
   line-height: 1.05;
   letter-spacing: normal;
+  @include text-xs-truncate;
 }
 
 .sub-header {
   text-shadow: 4px 4px rgba(0, 0, 0, 0.1);
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
   font-weight: 400;
+  @include text-xxs-truncate;
 }
 
 body {
@@ -142,7 +183,7 @@ body {
     }
   }
 
-  main ::-webkit-scrollbar-button {
+  ::-webkit-scrollbar-button {
     background: rgb(var(--v-theme-primary));
     border-radius: 0;
     background-clip: padding-box;
@@ -153,6 +194,10 @@ body {
       background-clip: padding-box;
       cursor: pointer;
     }
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
   }
 }
 

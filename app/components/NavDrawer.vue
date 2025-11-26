@@ -1,74 +1,99 @@
 <template>
-  <v-navigation-drawer v-model="drawer" class="border-0" id="navDrawer" app>
-    <v-list density="compact" nav class="d-flex flex-column overflow-y-auto">
-      <v-list-item prepend-icon="mdi-home" title="Home" to="/" />
-      <v-list-item prepend-icon="mdi-information" title="About" to="/about" />
-      <v-list-subheader>General</v-list-subheader>
-      <v-list-item
-        v-for="category in generalCategories"
-        :key="category.key"
-        :prepend-icon="category.icon"
-        :title="category.name"
-        :to="`/${category.key}`"
-      />
-      <v-list-subheader>Equipment</v-list-subheader>
-      <v-list-item
-        v-for="category in equipmentCategories"
-        :key="category.key"
-        :prepend-icon="category.icon"
-        :title="category.name"
-        :to="`/${category.key}`"
-      />
-      <v-list-subheader>Intel</v-list-subheader>
-      <v-list-item
-        v-for="category in intelCategories"
-        :key="category.key"
-        :prepend-icon="category.icon"
-        :title="category.name"
-        :to="`/${category.key}`"
-      />
-    </v-list>
+  <v-navigation-drawer
+    v-model="drawer"
+    class="border-0"
+    id="navDrawer"
+    :temporary="isTemporary"
+    :permanent="!isTemporary"
+  >
+    <nav class="d-flex flex-column h-100">
+      <v-list density="compact" nav>
+        <v-list-item prepend-icon="mdi-home" title="Home" to="/" />
+        <v-list-item prepend-icon="mdi-information" title="About" to="/about" />
 
-    <div class="d-flex align-center flex-column pa-4 ga-4 mt-auto">
-      <v-btn
-        icon="mdi-github"
-        href="https://github.com/bjornverbakel/pod-data"
-        target="_blank"
-        variant="plain"
-      >
-        <v-icon size="40" icon="mdi-github" />
-      </v-btn>
-      <v-divider class="w-100" />
-      <p class="text-caption text-medium-emphasis">
-        Pod Data is an unofficial checklist for tracking your completion progress in
-        <em>NieR: Automata</em>.
-      </p>
-      <div class="d-flex ga-2 justify-space-between text-body-2 w-100">
+        <v-list-subheader>General</v-list-subheader>
+        <v-list-item
+          v-for="category in generalCategories"
+          :key="category.key"
+          :prepend-icon="category.icon"
+          :title="category.name"
+          :to="`/${category.key}`"
+        />
+
+        <v-list-subheader>Equipment</v-list-subheader>
+        <v-list-item
+          v-for="category in equipmentCategories"
+          :key="category.key"
+          :prepend-icon="category.icon"
+          :title="category.name"
+          :to="`/${category.key}`"
+        />
+
+        <v-list-subheader>Intel</v-list-subheader>
+        <v-list-item
+          v-for="category in intelCategories"
+          :key="category.key"
+          :prepend-icon="category.icon"
+          :title="category.name"
+          :to="`/${category.key}`"
+        />
+      </v-list>
+
+      <div class="d-flex align-center flex-column pa-4 ga-4 mt-auto">
         <v-btn
+          icon="mdi-github"
+          href="https://github.com/bjornverbakel/pod-data"
+          target="_blank"
           variant="plain"
-          density="compact"
-          class="text-medium-emphasis text-decoration-none pa-1"
         >
-          Contact
+          <v-icon size="40" icon="mdi-github" />
         </v-btn>
-        <v-btn
-          variant="plain"
-          density="compact"
-          class="text-medium-emphasis text-decoration-none pa-1"
-          to="disclaimer"
-        >
-          Disclaimer
-        </v-btn>
+        <v-divider class="w-100" />
+        <p class="text-caption text-medium-emphasis">
+          Pod Data is an unofficial checklist for tracking your completion progress in
+          <em>NieR: Automata</em>.
+        </p>
+        <div class="d-flex ga-2 text-body-2 w-100">
+          <v-btn
+            variant="plain"
+            density="compact"
+            class="text-medium-emphasis text-decoration-none pa-1"
+          >
+            Contact
+          </v-btn>
+          <v-btn
+            variant="plain"
+            density="compact"
+            class="text-medium-emphasis text-decoration-none pa-1"
+            to="disclaimer"
+          >
+            Disclaimer
+          </v-btn>
+        </div>
       </div>
-    </div>
+    </nav>
   </v-navigation-drawer>
 </template>
 
 <script setup lang="ts">
-// Access drawer state from layout
-const drawer = inject<Ref<boolean>>('drawer')
+const { lgAndUp } = useDisplay()
 
-// Group categories by section
+const drawerToggle = inject<Ref<boolean>>('drawer')!
+
+const isTemporary = computed(() => !lgAndUp.value)
+
+watchEffect(() => {
+  if (lgAndUp.value) {
+    drawerToggle.value = true
+  } else {
+    drawerToggle.value = false
+  }
+})
+
+const drawer = drawerToggle
+
+declare const categories: { key: string; icon: string; name: string }[]
+
 const generalCategories = categories.filter(cat =>
   ['endings', 'sidequests', 'achievements'].includes(cat.key)
 )
