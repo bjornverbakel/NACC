@@ -183,26 +183,26 @@ body {
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgb(var(--v-theme-primary));
+    background: color.adjust(#47453d, $lightness: 10%);
     border-radius: 0;
     border: 5px solid transparent;
     background-clip: padding-box;
 
     &:hover {
-      background: color.adjust(#47453d, $lightness: 15%);
+      background: color.adjust(#47453d, $lightness: 20%);
       background-clip: padding-box;
       cursor: pointer;
     }
   }
 
   ::-webkit-scrollbar-button {
-    background: rgb(var(--v-theme-primary));
+    background: color.adjust(#47453d, $lightness: 10%);
     border-radius: 0;
     background-clip: padding-box;
     border: 5px solid transparent;
 
     &:hover {
-      background: color.adjust(#47453d, $lightness: 15%);
+      background: color.adjust(#47453d, $lightness: 20%);
       background-clip: padding-box;
       cursor: pointer;
     }

@@ -13,8 +13,16 @@
     <template v-slot:append>
       <!-- Anonymous user: Show chip + Sign up button -->
       <div v-if="user && isAnonymous" class="d-flex align-center ga-2">
-        <v-chip color="warning" size="small" prepend-icon="mdi-incognito"> Guest Mode </v-chip>
-        <v-btn color="secondary" to="/register" prepend-icon="mdi-account-plus"> Sign up </v-btn>
+        <v-chip color="warning" size="small" prepend-icon="mdi-incognito"> Guest</v-chip>
+        <v-btn
+          v-if="$vuetify.display.smAndUp"
+          color="secondary"
+          to="/register"
+          prepend-icon="mdi-account-plus"
+        >
+          Sign up
+        </v-btn>
+        <v-btn v-else color="secondary" to="/register" icon="mdi-account-plus" />
         <DevOnly>
           <v-btn color="secondary" @click="logout" icon="mdi-logout" :loading="loading"></v-btn>
         </DevOnly>
