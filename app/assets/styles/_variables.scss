@@ -1,3 +1,13 @@
 // Typography
 $font-family-base: 'Inter', sans-serif;
 $font-family-mono: 'Fira Code', monospace;
+
+// Vuetify equivalent spacing variables
+$pa-8: 32px;
+$pa-16: 64px;
+
+// Vuetify breakpoint equivalents
+$breakpoint-sm: 600px;
+$breakpoint-md: 960px;
+
+$header-height: 64px;

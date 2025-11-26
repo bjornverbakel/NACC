@@ -22,8 +22,8 @@ body {
   letter-spacing: 1px !important;
 }
 
-.h-screen-content {
-  min-height: calc(100vh - 64px);
+.full-bleed {
+  @include full-bleed;
 }
 
 .text-xs-truncate {
@@ -218,4 +218,5 @@ th {
   color: rgb(var(--v-theme-on-primary)) !important;
   font-weight: bold !important;
   text-transform: uppercase !important;
+  height: 56px !important;
 }

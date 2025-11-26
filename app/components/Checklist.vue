@@ -1,126 +1,153 @@
 <template>
-  <div>
-    <h1 class="main-header">{{ title }}</h1>
-    <h2 v-if="subtitle" class="sub-header mt-1">{{ subtitle }}</h2>
-  </div>
-
-  <AppAlert
-    v-if="feedback.message"
-    v-model:message="feedback.message"
-    :type="feedback.type || 'error'"
-    :closable="closable ?? false"
-    @clear="$emit('update:feedback', { ...feedback, message: '' })"
-  />
-
-  <div class="font-mono text-uppercase">
-    <div class="d-flex justify-space-between mb-1">
-      <span v-if="loading">[STATUS: LOADING...]</span>
-
-      <span v-else-if="$vuetify.display.smAndUp">
-        [STATUS: {{ completionPercent >= 100 ? 'FINISHED' : 'IN_PROGRESS' }}]
-      </span>
-
-      <span>{{ completedCount }} / {{ props.items.length }}</span>
+  <div class="section-spacing">
+    <div>
+      <h1 class="main-header">{{ title }}</h1>
+      <h2 v-if="subtitle" class="sub-header mt-1">{{ subtitle }}</h2>
     </div>
 
-    <v-progress-linear :model-value="completionPercent" color="primary" height="24">
-      <template v-slot:default="{ value }">
-        <span class="text-white"> {{ Math.ceil(value) }}% </span>
-      </template>
-    </v-progress-linear>
-  </div>
-
-  <div class="d-flex flex-column flex-sm-row ga-4 justify-space-between">
-    <v-text-field
-      v-model="search"
-      variant="solo"
-      flat
-      label="Search"
-      prepend-inner-icon="mdi-magnify"
-      clearable
-      hide-details
-      density="comfortable"
-      :max-width="$vuetify.display.smAndUp ? 300 : undefined"
+    <AppAlert
+      v-if="feedback.message"
+      v-model:message="feedback.message"
+      :type="feedback.type || 'error'"
+      :closable="closable ?? false"
+      @clear="$emit('update:feedback', { ...feedback, message: '' })"
     />
-    <v-switch
-      v-model="hideCompleted"
-      color="info"
-      label="Hide Completed"
-      hide-details
-      inset
-      density="comfortable"
-    />
-  </div>
 
-  <v-skeleton-loader v-if="loading" height="550" type="table" />
+    <div class="font-mono text-uppercase">
+      <div class="d-flex justify-space-between mb-1">
+        <span v-if="loading">[STATUS: LOADING...]</span>
 
-  <v-data-table-virtual
-    v-else
-    :headers="tableHeaders"
-    :items="displayItems"
-    :item-value="getItemKey"
-    height="550"
-    item-height="60"
-    fixed-header
-    hover
-  >
-    <template v-slot:item="{ item }">
-      <tr
-        :class="item._isGroupHeader ? 'bg-secondary' : ''"
-        :style="item._isGroupHeader ? '' : 'cursor: pointer'"
-        @click="!item._isGroupHeader && onToggle(item, !isCompleted(item))"
+        <span v-else-if="$vuetify.display.smAndUp">
+          [STATUS: {{ completionPercent >= 100 ? 'FINISHED' : 'IN_PROGRESS' }}]
+        </span>
+
+        <span>{{ completedCount }} / {{ props.items.length }}</span>
+      </div>
+
+      <v-progress-linear :model-value="completionPercent" color="primary" height="24">
+        <template v-slot:default="{ value }">
+          <span class="text-white"> {{ Math.ceil(value) }}% </span>
+        </template>
+      </v-progress-linear>
+    </div>
+
+    <div class="d-flex flex-column flex-sm-row ga-4 justify-space-between">
+      <v-text-field
+        v-model="search"
+        variant="solo"
+        flat
+        label="Search"
+        prepend-inner-icon="mdi-magnify"
+        clearable
+        hide-details
+        density="comfortable"
+        :max-width="$vuetify.display.smAndUp ? 300 : undefined"
+      />
+      <v-switch
+        v-model="hideCompleted"
+        color="info"
+        label="Hide Completed"
+        hide-details
+        inset
+        density="comfortable"
+      />
+    </div>
+
+    <div v-if="groupBy && groupKeys.length > 0" class="d-flex flex-wrap ga-2 full-bleed">
+      <v-chip
+        class="text-caption min-w-min"
+        size="small"
+        variant="text"
+        prepend-icon="mdi-flask"
+        color="medium-emphasis"
       >
-        <template v-if="item._isGroupHeader">
-          <td :colspan="tableHeaders.length" class="font-weight-bold text-on-secondary">
-            {{ item.title }}
-          </td>
-        </template>
-        <template v-else>
-          <td>
-            <v-checkbox
-              :model-value="isCompleted(item)"
-              @update:model-value="val => onToggle(item, !!val)"
-              hide-details
-              @click.stop
-            />
-          </td>
-          <td v-for="header in headers" :key="header.title">
-            <slot v-if="header.slot" :name="header.slot" :item="item" />
-            <template v-else>
-              <!-- Special handling for Name column to show indentation for variants -->
-              <div
-                v-if="header.key === 'name' && item.variant && hasBaseType(item)"
-                class="pl-4 text-medium-emphasis"
+        Shortcuts (experimental):
+      </v-chip>
+      <v-chip
+        v-for="group in groupKeys"
+        :key="group"
+        size="small"
+        variant="tonal"
+        @click="scrollToGroup(group)"
+        class="text-caption min-w-min"
+      >
+        {{ group }}
+      </v-chip>
+    </div>
+
+    <v-skeleton-loader v-if="loading" height="550" type="table" />
+
+    <v-data-table-virtual
+      v-else
+      ref="tableRef"
+      :headers="tableHeaders"
+      :items="displayItems"
+      :item-value="getItemKey"
+      height="550"
+      item-height="60"
+      fixed-header
+      hover
+    >
+      <template v-slot:item="{ item, index }">
+        <tr
+          :id="`checklist-item-${index}`"
+          height="56"
+          :class="item._isGroupHeader ? 'bg-secondary' : ''"
+          :style="item._isGroupHeader ? '' : 'cursor: pointer'"
+          @click="!item._isGroupHeader && onToggle(item, !isCompleted(item))"
+        >
+          <template v-if="item._isGroupHeader">
+            <td :colspan="tableHeaders.length" class="font-weight-bold text-on-secondary">
+              {{ item.title }}
+            </td>
+          </template>
+          <template v-else>
+            <td>
+              <v-checkbox
+                :model-value="isCompleted(item)"
+                @update:model-value="val => onToggle(item, !!val)"
+                hide-details
+                @click.stop
+              />
+            </td>
+            <td v-for="header in headers" :key="header.title">
+              <slot v-if="header.slot" :name="header.slot" :item="item" />
+              <template v-else>
+                <!-- Special handling for Name column to show indentation for variants -->
+                <div
+                  v-if="header.key === 'name' && item.variant && hasBaseType(item)"
+                  class="pl-4 text-medium-emphasis"
+                >
+                  <v-icon icon="mdi-subdirectory-arrow-right" size="small" class="mr-2" />
+                  {{ item[header.key!] }}
+                </div>
+                <div v-else>
+                  {{ item[header.key!] }}
+                </div>
+              </template>
+            </td>
+            <td>
+              <v-chip
+                v-if="item.guide_url"
+                size="small"
+                color="red"
+                variant="flat"
+                :href="item.guide_url"
+                target="_blank"
+                rel="noopener noreferrer"
+                @click.stop
               >
-                <v-icon icon="mdi-subdirectory-arrow-right" size="small" class="mr-2" />
-                {{ item[header.key!] }}
-              </div>
-              <div v-else>
-                {{ item[header.key!] }}
-              </div>
-            </template>
-          </td>
-          <td>
-            <v-chip
-              v-if="item.guide_url"
-              size="small"
-              color="red"
-              variant="flat"
-              :href="item.guide_url"
-              target="_blank"
-              rel="noopener noreferrer"
-              @click.stop
-            >
-              <v-avatar start class="bg-white">
-                <v-img src="/img/fextralife.jpg" class="pa-1" />
-              </v-avatar>
-              Fextralife
-            </v-chip>
-          </td>
-        </template>
-      </tr>
-    </template>
-  </v-data-table-virtual>
+                <v-avatar start class="bg-white">
+                  <v-img src="/img/fextralife.jpg" class="pa-1" />
+                </v-avatar>
+                Fextralife
+              </v-chip>
+            </td>
+          </template>
+        </tr>
+      </template>
+    </v-data-table-virtual>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -255,4 +282,24 @@ const displayItems = computed(() => {
   })
   return result
 })
+
+const tableRef = ref()
+
+const groupKeys = computed(() => {
+  if (!props.groupBy) return []
+  return displayItems.value.filter(item => item._isGroupHeader).map(item => item.title)
+})
+
+const scrollToGroup = async (group: string) => {
+  const index = displayItems.value.findIndex(item => item._isGroupHeader && item.title === group)
+
+  // If group not found or tableRef is not set, do nothing
+  if (index === -1 || !tableRef.value) {
+    return
+  }
+
+  if (typeof tableRef.value.scrollToIndex === 'function') {
+    tableRef.value.scrollToIndex(index)
+  }
+}
 </script>

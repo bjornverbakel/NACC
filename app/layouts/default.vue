@@ -3,10 +3,7 @@
   <NavDrawer />
 
   <v-main>
-    <v-container
-      fluid
-      class="main-content h-screen-content py-8 pa-sm-8 pa-md-16 d-flex flex-column ga-12 ga-md-16"
-    >
+    <v-container fluid class="main-content-wrapper d-flex flex-column ga-12 ga-md-16">
       <slot />
     </v-container>
   </v-main>
@@ -19,8 +16,12 @@ provide('drawer', drawer)
 </script>
 
 <style scoped lang="scss">
-.main-content {
+@use '@/assets/styles/_mixins.scss' as *;
+
+.main-content-wrapper {
   margin: 0 auto;
   max-width: 1200px;
+  @include page-padding;
+  @include h-screen-content;
 }
 </style>
