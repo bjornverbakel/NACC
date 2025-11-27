@@ -54,12 +54,6 @@ export default defineNuxtConfig({
     checkOutdatedBuildInterval: 5 * 60 * 1000, // 5 minutes
   },
 
-  ogImage: {
-    defaults: {
-      renderer: 'chromium',
-    },
-  },
-
   site: {
     url: 'https://poddata.net',
     name: 'Pod Data',
@@ -69,7 +63,6 @@ export default defineNuxtConfig({
     head: {
       charset: 'utf-16',
       viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
-      title: 'Pod Data',
       htmlAttrs: {
         lang: 'en',
       },

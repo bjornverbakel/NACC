@@ -48,11 +48,8 @@
 
 <script setup lang="ts">
 useHead({
-  // Will be auto added by Nuxt SEO
-  title: '',
+  title: null,
 })
-
-defineOgImageScreenshot()
 
 const loading = ref(true)
 const error = ref('')

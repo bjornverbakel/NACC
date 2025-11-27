@@ -16,7 +16,6 @@
     "@nuxtjs/turnstile": "^1.1.1",
     "nuxt": "4.1.3",
     "nuxt-skew-protection": "0.3.0",
-    "playwright": "^1.57.0",
     "prettier": "^3.6.2",
     "sass": "^1.94.0",
     "vuetify-nuxt-module": "^0.18.8"

@@ -9,6 +9,8 @@ useSeoMeta({
   ogDescription: 'Completion checklist for NieR: Automata to track your in-game progress.',
   ogType: 'website',
 })
+
+defineOgImageComponent('PodData')
 </script>
 
 <template>
