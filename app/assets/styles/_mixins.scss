@@ -19,15 +19,15 @@
 }
 
 @mixin page-padding {
-  padding-top: $pa-8;
-  padding-bottom: $pa-8;
+  padding-top: $sp-8;
+  padding-bottom: $sp-8;
 
   @media (min-width: $breakpoint-sm) {
-    padding: $pa-8;
+    padding: $sp-8;
   }
 
   @media (min-width: $breakpoint-md) {
-    padding: $pa-16;
+    padding: $sp-16;
   }
 }
 
@@ -47,19 +47,21 @@
     background: transparent;
   }
 
-  margin-left: -$pa-8 !important;
-  margin-right: -$pa-8 !important;
-  padding: 0 $pa-8 !important;
+  margin-left: -$sp-8 !important;
+  margin-right: -$sp-4 !important;
+  padding: 0 $sp-8 !important;
+  padding-right: $sp-4 !important;
 
   @media (min-width: $breakpoint-sm) {
-    margin-left: -$pa-8 !important;
-    margin-right: -$pa-8 !important;
-    padding: 0 $pa-8 !important;
+    margin-left: -$sp-8 !important;
+    margin-right: -$sp-8 !important;
+    padding-left: $sp-8 !important;
+    padding-right: $sp-8 !important;
   }
 
   @media (min-width: $breakpoint-md) {
-    margin-left: -$pa-16 !important;
-    margin-right: -$pa-16 !important;
-    padding: 0 $pa-16 !important;
+    margin-left: -$sp-16 !important;
+    margin-right: -$sp-16 !important;
+    padding: 0 $sp-16 !important;
   }
 }

@@ -65,6 +65,7 @@
             <v-list-item
               v-if="isAnonymous"
               to="/register"
+              @click="menu = false"
               prepend-icon="mdi-account-plus"
               title="Sign up"
               :loading="loading"
@@ -124,6 +125,7 @@
                 prepend-icon="mdi-account-plus"
                 title="Sign up"
                 :loading="loading"
+                @click="menu = false"
               />
               <v-list-item
                 v-else-if="user"
