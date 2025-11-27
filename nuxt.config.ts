@@ -5,8 +5,9 @@ export default defineNuxtConfig({
     '@nuxtjs/supabase',
     'vuetify-nuxt-module',
     '@nuxtjs/turnstile',
-    '@nuxtjs/seo',
+    'nuxt-og-image',
     'nuxt-skew-protection',
+    '@nuxtjs/seo',
   ],
 
   runtimeConfig: {
@@ -70,7 +71,18 @@ export default defineNuxtConfig({
       },
 
       link: [
-        { rel: 'icon', type: 'image/svg+xml', href: '/img/robot-secondary.svg' },
+        {
+          rel: 'icon',
+          type: 'image/svg+xml',
+          href: '/img/robot-primary.svg',
+          media: '(prefers-color-scheme: light)',
+        },
+        {
+          rel: 'icon',
+          type: 'image/svg+xml',
+          href: '/img/robot-secondary.svg',
+          media: '(prefers-color-scheme: dark)',
+        },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com' },
         {
