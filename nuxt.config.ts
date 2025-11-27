@@ -54,6 +54,12 @@ export default defineNuxtConfig({
     checkOutdatedBuildInterval: 5 * 60 * 1000, // 5 minutes
   },
 
+  ogImage: {
+    defaults: {
+      renderer: 'chromium',
+    },
+  },
+
   site: {
     url: 'https://poddata.net',
     name: 'Pod Data',

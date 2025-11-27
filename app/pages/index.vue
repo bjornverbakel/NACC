@@ -52,13 +52,7 @@ useHead({
   title: '',
 })
 
-// defineOgImageComponent('Nuxt', {
-//   title: 'Nuxt Commerce',
-//   description: 'A high-performance, server-rendered E-commerce app built with Nuxt & Shopify',
-//   theme: '#4ADE80',
-//   headline: '',
-//   colorMode: 'dark',
-// })
+defineOgImageScreenshot()
 
 const loading = ref(true)
 const error = ref('')

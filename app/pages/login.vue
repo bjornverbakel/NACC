@@ -89,14 +89,6 @@ useHead({
 
 definePageMeta({ authLayout: true })
 
-// defineOgImageComponent('Nuxt', {
-//   title: 'Nuxt Commerce',
-//   description: 'A high-performance, server-rendered E-commerce app built with Nuxt & Shopify',
-//   theme: '#4ADE80',
-//   headline: '',
-//   colorMode: 'dark',
-// })
-
 const { isAnonymous, login, signInAnonymously } = useAuth()
 const user = useSupabaseUser()
 const failedAttempts = ref(0)
