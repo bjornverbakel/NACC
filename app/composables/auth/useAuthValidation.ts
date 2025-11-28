@@ -38,11 +38,20 @@ export const useAuthValidation = () => {
     return null
   }
 
+  const validateUsername = (username: string) => {
+    if (!username) return 'Please enter a username.'
+    if (username.length > 32) return 'Username must be 32 characters or less.'
+    const usernameRegex = /^[a-z0-9_-]+$/
+    if (!usernameRegex.test(username)) return 'Username contains invalid characters.'
+    return null
+  }
+
   return {
     validateEmail,
     validatePassword,
     validatePasswordMatch,
     validateRequired,
     validateCaptcha,
+    validateUsername,
   }
 }

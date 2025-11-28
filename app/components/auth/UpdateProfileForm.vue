@@ -7,6 +7,9 @@
       prepend-inner-icon="mdi-account"
       label="Username"
       type="text"
+      hint="Allowed: [a-z], [0-9], underscore (_), and hyphen (-). Max length of 32."
+      persistent-hint
+      :hide-details="false"
     />
 
     <v-btn type="submit" color="primary" class="w-fit" :loading="loading">
@@ -17,7 +20,7 @@
 
 <script setup lang="ts">
 const { profile, updateProfile } = useProfile()
-const { validateRequired } = useAuthValidation()
+const { validateRequired, validateUsername } = useAuthValidation()
 
 const username = ref('')
 const loading = ref(false)
@@ -40,6 +43,12 @@ const handleUpdate = async () => {
   const requiredError = validateRequired({ username: trimmedUsername })
   if (requiredError) {
     feedback.value = { message: requiredError, type: 'error' }
+    return
+  }
+
+  const usernameError = validateUsername(trimmedUsername)
+  if (usernameError) {
+    feedback.value = { message: usernameError, type: 'error' }
     return
   }
 

@@ -68,6 +68,9 @@
               prepend-inner-icon="mdi-account"
               label="Username"
               type="text"
+              :hide-details="false"
+              persistent-hint
+              hint="Allowed: [a-z], [0-9], underscore (_), and hyphen (-). Max length of 32."
             />
 
             <v-text-field
@@ -129,7 +132,8 @@ useHead({
 definePageMeta({ authLayout: true })
 
 const { isAnonymous, register, signInAnonymously, resendVerification } = useAuth()
-const { validateRequired, validatePassword, validateCaptcha, validateEmail } = useAuthValidation()
+const { validateRequired, validatePassword, validateCaptcha, validateEmail, validateUsername } =
+  useAuthValidation()
 const username = ref('')
 const email = ref('')
 const password = ref('')
@@ -162,6 +166,12 @@ const handleSignUp = async () => {
   })
   if (requiredError) {
     feedback.value = { message: requiredError, type: 'error' }
+    return
+  }
+
+  const usernameError = validateUsername(trimmedUsername)
+  if (usernameError) {
+    feedback.value = { message: usernameError, type: 'error' }
     return
   }
 

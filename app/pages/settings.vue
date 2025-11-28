@@ -1,8 +1,8 @@
 <template>
-  <section class="section-spacing">
+  <div class="section-spacing">
     <h1 class="main-header">Settings</h1>
 
-    <v-card class="pa-0 pa-sm-8" :color="$vuetify.display.smAndUp ? undefined : 'background'">
+    <v-card class="pa-6 pa-sm-8">
       <div class="section-spacing-sm">
         <v-card-title class="pa-0 text-truncate-wrap">Data</v-card-title>
         <v-card-text class="pa-0">
@@ -18,12 +18,12 @@
           class="w-fit"
           variant="flat"
         >
-          Export Data
+          <span class="text-truncate-wrap">Export Data</span>
         </v-btn>
 
         <v-divider class="my-4" />
 
-        <div class="d-flex align-start ga-4">
+        <div class="d-flex align-start flex-column flex-sm-row ga-4">
           <v-file-input
             v-model="importFile"
             label="Import Data (JSON)"
@@ -31,6 +31,7 @@
             prepend-icon="mdi-upload"
             :loading="importing"
             :error-messages="error"
+            class="w-100"
             show-size
             hide-details
           />
@@ -39,8 +40,9 @@
             :disabled="!canImport"
             :loading="importing"
             @click="handleImport"
-            height="56"
-            variant="plain"
+            :height="$vuetify.display.smAndUp ? '56' : undefined"
+            variant="flat"
+            color="primary"
           >
             Import
           </v-btn>
@@ -55,25 +57,20 @@
         <AppAlert v-if="error" type="error" :message="error" @clear="error = ''" />
       </div>
     </v-card>
+  </div>
+  <v-card v-if="!isAnonymous && user" class="pa-6 pa-sm-8">
+    <div class="section-spacing-sm">
+      <v-card-title class="pa-0 text-truncate-wrap">Account</v-card-title>
+      <v-card-text class="pa-0"> Update your profile information. </v-card-text>
 
-    <v-card
-      v-if="!isAnonymous && user"
-      class="pa-0 pa-sm-8 mt-8"
-      :color="$vuetify.display.smAndUp ? undefined : 'background'"
-    >
-      <div class="section-spacing-sm">
-        <v-card-title class="pa-0 text-truncate-wrap">Account</v-card-title>
-        <v-card-text class="pa-0"> Update your profile information. </v-card-text>
+      <UpdateProfileForm />
 
-        <UpdateProfileForm />
+      <v-divider class="my-4" />
 
-        <v-divider class="my-4" />
-
-        <div class="text-h6">Change Password</div>
-        <UpdatePasswordForm />
-      </div>
-    </v-card>
-  </section>
+      <div class="text-h6">Change Password</div>
+      <UpdatePasswordForm />
+    </div>
+  </v-card>
 </template>
 
 <script setup lang="ts">
