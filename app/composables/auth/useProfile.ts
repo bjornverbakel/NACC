@@ -24,6 +24,26 @@ export const useProfile = () => {
     profile.value = data
   }
 
+  const updateProfile = async (updates: Partial<Profile>) => {
+    const userId = user.value?.id || user.value?.sub
+    if (!userId) return { error: new Error('No user logged in') }
+
+    const { data, error } = await client
+      .from('profiles')
+      .upsert({
+        id: userId,
+        ...updates,
+        updated_at: new Date().toISOString(),
+      })
+      .select()
+      .single()
+
+    if (error) return { error }
+
+    profile.value = data
+    return { data, error: null }
+  }
+
   // Fetch profile when user changes
   watch(
     () => user.value?.id || user.value?.sub,
@@ -40,5 +60,6 @@ export const useProfile = () => {
   return {
     profile,
     fetchProfile,
+    updateProfile,
   }
 }

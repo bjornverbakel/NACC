@@ -37,19 +37,22 @@ useHead({
 definePageMeta({ authLayout: true })
 
 const { resetPassword } = useAuth()
+const { validateEmail, validateCaptcha } = useAuthValidation()
 const email = ref('')
 const token = ref('')
 const loading = ref(false)
 const feedback = ref({ message: '', type: 'info' as 'success' | 'error' | 'info' | 'warning' })
 
 const handleResetPassword = async () => {
-  if (!email.value.trim()) {
-    feedback.value = { message: 'Please enter your email.', type: 'error' }
+  const emailError = validateEmail(email.value.trim())
+  if (emailError) {
+    feedback.value = { message: emailError, type: 'error' }
     return
   }
 
-  if (!token.value) {
-    feedback.value = { message: 'Please complete the security check', type: 'error' }
+  const captchaError = validateCaptcha(token.value)
+  if (captchaError) {
+    feedback.value = { message: captchaError, type: 'error' }
     return
   }
 
@@ -59,12 +62,12 @@ const handleResetPassword = async () => {
   const { error } = await resetPassword(
     email.value.trim(),
     token.value,
-    `${window.location.origin}/new-password`
+    `${window.location.origin}/confirm?redirect=${encodeURIComponent('/new-password?type=recovery')}`
   )
 
   // Ensure minimum loading time to prevent timing attacks
   const elapsedTime = Date.now() - startTime
-  const minDelay = 1000 // 1 second
+  const minDelay = Math.random() * (2000 - 1000) + 1000 // Random delay between 1 and 2 seconds
   if (elapsedTime < minDelay) {
     await new Promise(resolve => setTimeout(resolve, minDelay - elapsedTime))
   }

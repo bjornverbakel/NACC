@@ -138,6 +138,13 @@ export const useAuth = () => {
     })
   }
 
+  const resendVerification = async (email: string) => {
+    return await client.auth.resend({
+      type: 'signup',
+      email,
+    })
+  }
+
   const resetPassword = async (email: string, captchaToken?: string, redirectTo?: string) => {
     if (captchaToken) {
       const isValid = await verifyCaptcha(captchaToken)
@@ -158,6 +165,7 @@ export const useAuth = () => {
     signInAnonymously,
     login,
     register,
+    resendVerification,
     resetPassword,
   }
 }

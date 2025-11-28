@@ -2,9 +2,9 @@
   <section class="section-spacing">
     <h1 class="main-header">Settings</h1>
 
-    <v-card class="pa-8">
+    <v-card class="pa-0 pa-sm-8" :color="$vuetify.display.smAndUp ? undefined : 'background'">
       <div class="section-spacing-sm">
-        <v-card-title class="pa-0 text-truncate-wrap">Data Management</v-card-title>
+        <v-card-title class="pa-0 text-truncate-wrap">Data</v-card-title>
         <v-card-text class="pa-0">
           Export your completion data to a JSON file, or import data from a previously exported
           file. This allows you to backup your progress or transfer it to another account.
@@ -55,10 +55,27 @@
         <AppAlert v-if="error" type="error" :message="error" @clear="error = ''" />
       </div>
     </v-card>
+
+    <v-card class="pa-0 pa-sm-8 mt-8" :color="$vuetify.display.smAndUp ? undefined : 'background'">
+      <div class="section-spacing-sm">
+        <v-card-title class="pa-0 text-truncate-wrap">Account</v-card-title>
+        <v-card-text class="pa-0"> Update your profile information. </v-card-text>
+
+        <UpdateProfileForm />
+
+        <v-divider class="my-4" />
+
+        <div class="text-h6">Change Password</div>
+        <UpdatePasswordForm />
+      </div>
+    </v-card>
   </section>
 </template>
 
 <script setup lang="ts">
+import UpdatePasswordForm from '~/components/auth/UpdatePasswordForm.vue'
+import UpdateProfileForm from '~/components/auth/UpdateProfileForm.vue'
+
 useHead({
   title: 'Settings',
 })

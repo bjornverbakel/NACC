@@ -101,6 +101,17 @@ const email = ref('')
 const password = ref('')
 const token = ref('')
 const route = useRoute()
+const { validateRequired, validateCaptcha } = useAuthValidation()
+
+onMounted(() => {
+  const errorDescription = route.query.error_description as string
+  if (errorDescription) {
+    feedback.value = {
+      message: errorDescription,
+      type: 'error',
+    }
+  }
+})
 
 watchEffect(async () => {
   // Only redirect non-anonymous authenticated users
@@ -114,16 +125,18 @@ const handleLogin = async () => {
   const trimmedEmail = email.value.trim()
   const currentPassword = password.value
 
-  // 1. Required Fields Check
-  if (!trimmedEmail || !currentPassword) {
-    feedback.value = { message: 'Please fill in all required fields.', type: 'error' }
+  const requiredError = validateRequired({ email: trimmedEmail, password: currentPassword })
+  if (requiredError) {
+    feedback.value = { message: requiredError, type: 'error' }
     return
   }
 
-  // 2. Conditional Captcha Check
-  if (showCaptcha.value && !token.value) {
-    feedback.value = { message: 'Please complete the security check', type: 'error' }
-    return
+  if (showCaptcha.value) {
+    const captchaError = validateCaptcha(token.value)
+    if (captchaError) {
+      feedback.value = { message: captchaError, type: 'error' }
+      return
+    }
   }
 
   loading.value = true
