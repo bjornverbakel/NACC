@@ -55,6 +55,62 @@
           @clear="successMessage = ''"
         />
         <AppAlert v-if="error" type="error" :message="error" @clear="error = ''" />
+
+        <v-divider class="my-4" />
+
+        <v-card-title class="pa-0 text-truncate-wrap">Import Game Save</v-card-title>
+        <v-card-text class="pa-0">
+          Import your NieR: Automata save file (SlotData_0.dat, etc.) to automatically mark items as
+          completed.
+          <br />
+          <small class="text-medium-emphasis"
+            >Note: Only items with known IDs will be imported.</small
+          >
+        </v-card-text>
+
+        <div class="d-flex align-start flex-column flex-sm-row ga-4 mt-2">
+          <v-file-input
+            v-model="saveFile"
+            label="Import Save File (.dat)"
+            accept=".dat"
+            prepend-icon="mdi-gamepad-round"
+            :loading="saveImporting"
+            :error-messages="saveError"
+            class="w-100"
+            show-size
+            hide-details
+          />
+
+          <v-btn
+            :disabled="!canImportSave"
+            :loading="saveImporting"
+            @click="handleSaveImport"
+            :height="$vuetify.display.smAndUp ? '56' : undefined"
+            variant="flat"
+            color="primary"
+          >
+            Import Save
+          </v-btn>
+
+          <v-btn
+            :disabled="!canImportSave"
+            :loading="saveImporting"
+            @click="handleSaveDebug"
+            :height="$vuetify.display.smAndUp ? '56' : undefined"
+            variant="outlined"
+            color="secondary"
+          >
+            Debug JSON
+          </v-btn>
+        </div>
+
+        <AppAlert
+          v-if="saveSuccessMessage"
+          type="success"
+          :message="saveSuccessMessage"
+          @clear="saveSuccessMessage = ''"
+        />
+        <AppAlert v-if="saveError" type="error" :message="saveError" @clear="saveError = ''" />
       </div>
     </v-card>
   </div>
@@ -76,6 +132,7 @@
 <script setup lang="ts">
 import UpdatePasswordForm from '~/components/auth/UpdatePasswordForm.vue'
 import UpdateProfileForm from '~/components/auth/UpdateProfileForm.vue'
+import { useSaveImporter } from '~/composables/common/useSaveImporter'
 
 useHead({
   title: 'Settings',
@@ -90,6 +147,38 @@ const importing = ref(false)
 const importFile = ref<File[] | null>(null)
 const error = ref('')
 const successMessage = ref('')
+
+const {
+  importSaveFile: importGameSave,
+  downloadParsedSave,
+  importing: saveImporting,
+  error: saveError,
+  successMessage: saveSuccessMessage,
+} = useSaveImporter()
+const saveFile = ref<File[] | null>(null)
+
+const canImportSave = computed(() => {
+  if (!saveFile.value) return false
+  if (Array.isArray(saveFile.value)) return saveFile.value.length > 0
+  return !!saveFile.value
+})
+
+const handleSaveImport = async () => {
+  const file = Array.isArray(saveFile.value) ? saveFile.value[0] : saveFile.value
+  if (!file) return
+
+  await importGameSave(file)
+  if (!saveError.value) {
+    saveFile.value = null
+  }
+}
+
+const handleSaveDebug = async () => {
+  const file = Array.isArray(saveFile.value) ? saveFile.value[0] : saveFile.value
+  if (!file) return
+
+  await downloadParsedSave(file)
+}
 
 const canImport = computed(() => {
   if (!importFile.value) return false
