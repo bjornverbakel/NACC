@@ -37,15 +37,12 @@ export const useDataManagement = () => {
     URL.revokeObjectURL(url)
   }
 
-  const importData = async (file: File) => {
+  const processImportData = async (data: any) => {
     if (!user.value) throw new Error('User not authenticated')
     const userId = user.value.id || (user.value as any).sub
 
-    const text = await file.text()
-    const importData = JSON.parse(text)
-
     for (const category of categories) {
-      const items = importData[category.key]
+      const items = data[category.key]
       if (!items || !Array.isArray(items)) continue
 
       // Prepare items for upsert
@@ -67,8 +64,33 @@ export const useDataManagement = () => {
     }
   }
 
+  const importData = async (file: File) => {
+    const text = await file.text()
+    const data = JSON.parse(text)
+    await processImportData(data)
+  }
+
+  const clearAllData = async () => {
+    if (!user.value) throw new Error('User not authenticated')
+    const userId = user.value.id || (user.value as any).sub
+
+    await Promise.all(
+      categories.map(category =>
+        client
+          .from(category.relationKey as any)
+          .delete()
+          .eq('user_id', userId)
+          .then(({ error }) => {
+            if (error) throw error
+          })
+      )
+    )
+  }
+
   return {
     exportData,
     importData,
+    processImportData,
+    clearAllData,
   }
 }
