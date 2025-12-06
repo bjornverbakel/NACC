@@ -32,6 +32,14 @@
         <v-card-text class="pa-0">
           Import your NieR: Automata save file to automatically mark items as completed.
         </v-card-text>
+        <v-card-text class="pa-0 text-error">
+          <strong>Note:</strong> This feature is a WIP and currently only supports Pod Programs,
+          Weapons, Archives, and Fish. If you have completion data manually entered, it's
+          recommended to
+          <a class="text-error" href="#" @click.prevent="scrollToManageData">export a backup</a>
+          before proceeding. Some items may not be marked correctly.
+        </v-card-text>
+
         <v-expansion-panels variant="accordion" flat class="border-b font-base">
           <v-expansion-panel>
             <v-expansion-panel-title class="px-3">
@@ -65,7 +73,8 @@
             :error-messages="saveError"
             class="w-100"
             show-size
-            hide-details
+            persistent-hint
+            hint="Currently supports: Pod Programs, Weapons, Archives, Fish"
           />
 
           <v-btn
@@ -101,7 +110,7 @@
       </div>
     </v-card>
 
-    <v-card class="pa-6 pa-sm-8">
+    <v-card class="pa-6 pa-sm-8" id="manage-completion-data">
       <div class="section-spacing-sm">
         <v-card-title class="pa-0 text-truncate-wrap">Manage Completion Data</v-card-title>
         <v-card-text class="pa-0">
@@ -318,5 +327,12 @@ const performClearData = async () => {
   } catch (e: any) {
     deleteError.value = 'Failed to clear data: ' + e.message
   }
+}
+
+const scrollToManageData = () => {
+  if (typeof document === 'undefined') return
+  const el = document.getElementById('manage-completion-data')
+  if (!el) return
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 </script>
