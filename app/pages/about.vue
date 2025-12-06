@@ -85,7 +85,7 @@
         >
           FextraLife NieR: Automata Wiki
         </a>
-        <span class="text-medium-emphasis">- Data & guides</span>
+        <span class="text-medium-emphasis">- Completion data & guides</span>
       </li>
       <li>
         <a
@@ -96,7 +96,7 @@
         >
           Fandom NieR: Automata Wiki
         </a>
-        <span class="text-medium-emphasis">- Data</span>
+        <span class="text-medium-emphasis">- Completion data</span>
       </li>
       <li>
         <a
@@ -107,7 +107,18 @@
         >
           Steam Community: 100% Guide to NieR:Automata™
         </a>
-        <span class="text-medium-emphasis">- Data</span>
+        <span class="text-medium-emphasis">- Completion data</span>
+      </li>
+      <li>
+        <a
+          href="https://fearlessrevolution.com/viewtopic.php?p=244780#p244780"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="custom-link"
+        >
+          Fearless Revolution: NieR Automata
+        </a>
+        <span class="text-medium-emphasis">- Save file IDs</span>
       </li>
     </ul>
   </section>

@@ -4,13 +4,13 @@ This is a completion checklist app for **NieR: Automata**, available at [poddata
 
 ## Technologies
 
-* **Framework**: [Nuxt 4](https://nuxt.com)
-* **Database & Authentication**: [Supabase](https://supabase.com)
-* **UI Library**: [Vuetify](https://vuetifyjs.com)
-* **Styling**: [SCSS (Sass)](https://sass-lang.com)
-* **Deployment**: [Vercel](https://vercel.com)
-* **CDN & Security**: [Cloudflare](https://cloudflare.com)
-* **Bot Protection**: [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile)
+- **Framework**: [Nuxt 4](https://nuxt.com)
+- **Database & Authentication**: [Supabase](https://supabase.com)
+- **UI Library**: [Vuetify](https://vuetifyjs.com)
+- **Styling**: [SCSS (Sass)](https://sass-lang.com)
+- **Deployment**: [Vercel](https://vercel.com)
+- **CDN & Security**: [Cloudflare](https://cloudflare.com)
+- **Bot Protection**: [Cloudflare Turnstile](https://www.cloudflare.com/products/turnstile)
 
 ## Setup
 
@@ -42,9 +42,10 @@ More instructions can be found [here](/docs/CHEATSHEET.md).
 
 ## Resources & Acknowledgements
 
-- [FextraLife NieR: Automata Wiki](https://nierautomata.wiki.fextralife.com/Nier+Automata+Wiki) - Data & guides
-- [Fandom NieR: Automata Wiki](https://nier.fandom.com/wiki/NieR:Automata) - Data
-- [Steam Community: 100% Guide to NieR:Automata™](https://steamcommunity.com/sharedfiles/filedetails/?id=1690393671) - Data
+- [FextraLife NieR: Automata Wiki](https://nierautomata.wiki.fextralife.com/Nier+Automata+Wiki) - Completion data & guides
+- [Fandom NieR: Automata Wiki](https://nier.fandom.com/wiki/NieR:Automata) - Completion data
+- [Steam Community: 100% Guide to NieR:Automata™](https://steamcommunity.com/sharedfiles/filedetails/?id=1690393671) - Completion data
+- [Fearless Revolution: NieR Automata](https://fearlessrevolution.com/viewtopic.php?p=244780#p244780) - Save file IDs
 
 NieR: Automata is © Square Enix and PlatinumGames. This app is an independent project and is not affiliated with or endorsed by the original creators.
 
