@@ -6,7 +6,6 @@ export default defineNuxtConfig({
     'vuetify-nuxt-module',
     '@nuxtjs/turnstile',
     'nuxt-og-image',
-    'nuxt-skew-protection',
     '@nuxtjs/seo',
   ],
 
