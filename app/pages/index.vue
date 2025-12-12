@@ -22,7 +22,7 @@
       save file in the settings to get started.
     </p>
 
-    <v-btn class="w-fit" variant="flat" to="/settings#import-game-save">Import Save</v-btn>
+    <v-btn class="w-fit" variant="flat" to="/settings">Import Save</v-btn>
   </section>
 
   <section class="section-spacing">
