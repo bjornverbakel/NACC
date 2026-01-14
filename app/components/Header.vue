@@ -28,17 +28,30 @@
       <!-- Normal logged in user: Show action menu -->
       <div v-if="user">
         <div v-if="mdAndUp" class="d-flex align-center ga-2">
-          <v-btn to="/settings" icon="mdi-cog" variant="text" />
+          <v-tooltip text="Settings" location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-btn v-bind="props" to="/settings" icon="mdi-cog" variant="text" />
+            </template>
+          </v-tooltip>
 
-          <v-btn
-            v-if="!isAnonymous"
-            icon="mdi-account"
-            id="user-menu-trigger"
-            variant="text"
-          ></v-btn>
+          <v-tooltip text="Profile" location="bottom">
+            <template v-slot:activator="{ props }">
+              <v-btn
+                v-if="!isAnonymous"
+                v-bind="props"
+                icon="mdi-account"
+                id="user-menu-trigger"
+                variant="text"
+              ></v-btn>
+            </template>
+          </v-tooltip>
         </div>
 
-        <v-btn v-else icon="mdi-dots-vertical" id="user-menu-trigger" variant="text" />
+        <v-tooltip v-else text="Actions" location="bottom">
+          <template v-slot:activator="{ props }">
+            <v-btn v-bind="props" icon="mdi-dots-vertical" id="user-menu-trigger" variant="text" />
+          </template>
+        </v-tooltip>
 
         <!-- Desktop Menu -->
         <v-menu
