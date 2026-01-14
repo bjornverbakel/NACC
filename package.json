@@ -2,6 +2,13 @@
   "name": "pod-data",
   "description": "Pod Data is an unofficial checklist for tracking your completion progress in NieR: Automata. Mark various items, quests, and achievements as completed, to help keep track of what you've done and what still needs to be accomplished.",
   "private": true,
+  "packageManager": "pnpm@10.26.2",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "esbuild"
+    ]
+  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -21,12 +28,10 @@
     "@nuxtjs/turnstile": "^1.1.1",
     "dotenv": "17.2.3",
     "nuxt": "4.1.3",
-    "nuxt-og-image": "^5.1.13",
     "prettier": "^3.7.4",
     "sass": "^1.97.2",
     "vuetify-nuxt-module": "^0.19.2"
   },
-  "packageManager": "pnpm@10.26.2",
   "dependencies": {
     "@vercel/analytics": "^1.6.1",
     "@vercel/speed-insights": "^1.3.1",

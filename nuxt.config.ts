@@ -5,7 +5,6 @@ export default defineNuxtConfig({
     '@nuxtjs/supabase',
     'vuetify-nuxt-module',
     '@nuxtjs/turnstile',
-    // 'nuxt-og-image', // Included in @nuxtjs/seo
     '@nuxtjs/seo',
     '@nuxt/fonts',
   ],
@@ -105,5 +104,8 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'vercel',
+    future: {
+      nativeSWR: true,
+    },
   },
 })
