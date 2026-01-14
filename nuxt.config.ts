@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     'vuetify-nuxt-module',
     '@nuxtjs/turnstile',
     '@nuxtjs/seo',
+    'nuxt-og-image', // Should be added by nuxt-seo, but its causing errors if not added separately
     '@nuxt/fonts',
   ],
 
