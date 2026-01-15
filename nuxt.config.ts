@@ -1,29 +1,54 @@
 import { vuetifyConfig } from './vuetify.config'
 
+const isGitHubActions = process.env.GITHUB_ACTIONS === 'true'
+// Build-time rendering (Nitro prerender, zero-runtime sitemap, OG image generation)
+// can fail in CI when runtime secrets are intentionally not available.
+// Keep it enabled everywhere except GitHub Actions.
+const enableBuildTimeArtifacts = !isGitHubActions
+
 export default defineNuxtConfig({
+  // Framework
+  compatibilityDate: '2025-02-19',
+  future: {
+    compatibilityVersion: 4,
+  },
+  experimental: {
+    checkOutdatedBuildInterval: 5 * 60 * 1000, // 5 minutes
+  },
+
+  // Modules
   modules: [
-    '@nuxtjs/supabase',
-    'vuetify-nuxt-module',
-    '@nuxtjs/turnstile',
+    '@nuxt/fonts',
     '@nuxtjs/seo',
     'nuxt-og-image', // Should be added by nuxt-seo, but its causing errors if not added separately
-    '@nuxt/fonts',
+    '@nuxtjs/supabase',
+    '@nuxtjs/turnstile',
+    'vuetify-nuxt-module',
   ],
 
+  // Styling
+  css: ['~/assets/styles/main.scss'],
+
+  // Auto-imports
+  components: [
+    {
+      path: '~/components/',
+      pathPrefix: false,
+    },
+  ],
+  imports: {
+    dirs: ['composables/**'],
+  },
+
+  // SEO
   sitemap: {
-    zeroRuntime: true,
+    zeroRuntime: enableBuildTimeArtifacts,
   },
-
-  routeRules: {
-    '/': { swr: true },
-    '/about': { prerender: true },
-    '/disclaimer': { prerender: true },
-  },
-
   ogImage: {
-    enabled: true,
+    enabled: enableBuildTimeArtifacts,
   },
 
+  // Runtime config (env)
   runtimeConfig: {
     turnstile: {
       secretKey: process.env.TURNSTILE_SECRET_KEY,
@@ -35,15 +60,7 @@ export default defineNuxtConfig({
     },
   },
 
-  css: ['~/assets/styles/main.scss'],
-
-  vuetify: {
-    moduleOptions: {
-      /* module specific options */
-    },
-    vuetifyOptions: vuetifyConfig,
-  },
-
+  // Module config
   supabase: {
     redirectOptions: {
       login: '/login',
@@ -52,31 +69,20 @@ export default defineNuxtConfig({
     },
     types: '~/types/database.types.ts',
   },
-
-  components: [
-    {
-      path: '~/components/',
-      pathPrefix: false,
+  vuetify: {
+    moduleOptions: {
+      /* module specific options */
     },
-  ],
-
-  future: {
-    compatibilityVersion: 4,
+    vuetifyOptions: vuetifyConfig,
   },
 
-  imports: {
-    dirs: ['composables/**'],
-  },
-
-  experimental: {
-    checkOutdatedBuildInterval: 5 * 60 * 1000, // 5 minutes
-  },
-
+  // Site metadata
   site: {
     url: 'https://poddata.net',
     name: 'Pod Data',
   },
 
+  // App metadata
   app: {
     head: {
       charset: 'utf-16',
@@ -87,7 +93,6 @@ export default defineNuxtConfig({
       bodyAttrs: {
         class: 'font-base',
       },
-
       link: [
         {
           rel: 'icon',
@@ -105,8 +110,18 @@ export default defineNuxtConfig({
     },
   },
 
-  compatibilityDate: '2025-02-19',
+  // Routing & caching
+  routeRules: {
+    '/': { swr: true },
+    ...(enableBuildTimeArtifacts
+      ? {
+          '/about': { prerender: true },
+          '/disclaimer': { prerender: true },
+        }
+      : {}),
+  },
 
+  // Server
   nitro: {
     preset: 'vercel',
     future: {
